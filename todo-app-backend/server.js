@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./utils/db.js";
+import userRoute from "./routes/userRoutes.js"
 
 dotenv.config();
 
@@ -22,7 +23,8 @@ app.use(cors(corsOption));
 // Routes
 // app.use("/api/v1/auth", require("./routes/authRoutes"));
 // app.use("/api/v1/tasks", require("./routes/taskRoutes"));
-// app.use("/api/v1/user", require("./routes/userRoutes"));
+app.use("/api/v1/user", userRoute);
+
 
 // Error handler
 // app.use((err, req, res, next) => {
@@ -32,7 +34,7 @@ app.use(cors(corsOption));
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT,() => {
+app.listen(PORT, () => {
     connectDB();
     console.log(`Server running at port ${PORT}`);
 });
