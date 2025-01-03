@@ -21,9 +21,8 @@ const corsOption = {
 app.use(cors(corsOption));
 
 // Routes
-// app.use("/api/v1/auth", require("./routes/authRoutes"));
-// app.use("/api/v1/tasks", require("./routes/taskRoutes"));
 app.use("/api/v1/user", userRoute);
+// app.use("/api/v1/tasks", require("./routes/taskRoutes"));
 
 
 // Error handler
