@@ -17,13 +17,7 @@ const userSchema = new mongoose.Schema({
         bio: {
             type: String
         }
-    },
-    otp: {
-        type: String
-    },
-    otpExpiry: {
-        type: Date
-    },
+    }
 },
     { timestamps: true }
 );

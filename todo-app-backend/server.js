@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./utils/db.js";
 import userRoute from "./routes/userRoutes.js"
+import taskRoute from "./routes/taskRoutes.js"
 
 dotenv.config();
 
@@ -22,7 +23,7 @@ app.use(cors(corsOption));
 
 // Routes
 app.use("/api/v1/user", userRoute);
-// app.use("/api/v1/tasks", require("./routes/taskRoutes"));
+app.use("/api/v1/tasks", taskRoute);
 
 
 // Error handler

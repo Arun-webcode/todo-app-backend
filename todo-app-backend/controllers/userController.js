@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 export const register = async (req, res) => {
     try {
         const { email } = req.body;
-        console.log(email);
         if (!email) {
             return res.status(400).json({
                 message: "Email is required",
@@ -29,25 +28,26 @@ export const register = async (req, res) => {
         User.otpExpiry = otpExpiry;
         User.email = email;
 
-        console.log(User.otp + " -- " + User.otpExpiry);
-
-        await sendEmail(email, "Your OTP Code", `Your OTP is ${otp}`);
+        await sendEmail(email, "Todo App OTP Code", `Otp verification code for Todo App is ${otp} and is valid for 5 minutes. Please don't share with anyone`);
 
         return res.status(200).json({
             message: "OTP sent to your email",
             success: true
         });
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Server error", success: false });
+        return res.status(500).json({
+            message: "Server error of register api",
+            error: error.message,
+            success: false
+        });
     }
 };
 
 export const verifyOtpAndCreateAccount = async (req, res) => {
     try {
-        const { otp, password } = req.body;
+        const { name, otp, password } = req.body;
 
-        if (!otp || !password) {
+        if (!name || !otp || !password) {
             return res.status(400).json({
                 message: "All fields are required",
                 success: false
@@ -72,8 +72,12 @@ export const verifyOtpAndCreateAccount = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         await User.create({
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            name
         });
+
+        User.otp = null;
+        User.otpExpiry = null;
 
         return res.status(201).json({
             message: "Account created successfully",
@@ -81,9 +85,9 @@ export const verifyOtpAndCreateAccount = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error);
         res.status(500).json({
             message: "Server error",
+            error: error.message,
             success: false
         });
     }
@@ -108,20 +112,20 @@ export const sendResetPasswordOtp = async (req, res) => {
         }
 
         const otp = crypto.randomInt(100000, 999999).toString();
-        user.otp = otp;
-        user.otpExpiry = Date.now() + 5 * 60 * 1000;
-        await user.save();
+        User.otp = otp;
+        User.otpExpiry = Date.now() + 5 * 60 * 1000;
+        User.email = email;
 
-        await sendEmail(email, "Password Reset OTP", `Your OTP is ${otp}`);
+        await sendEmail(email, "Todo Password Reset OTP", `Otp reset verification code of Todo App is ${otp} . and is valid for 5 minutes. Please don't share with anyone.`);
 
         res.status(200).json({
             message: "OTP sent to your email",
             success: true
         });
     } catch (error) {
-        console.error(error);
         res.status(500).json({
-            message: "Server error",
+            message: "Server error in sendResetPasswordOtp api",
+            error: error.message,
             success: false
         });
     }
@@ -139,7 +143,8 @@ export const resetPassword = async (req, res) => {
 
         const email = User.email;
         const user = await User.findOne({ email });
-        if (!user || user.otp !== otp || user.otpExpiry < Date.now()) {
+
+        if (!user || User.otp !== otp || User.otpExpiry < Date.now()) {
             return res.status(400).json({
                 message: "Invalid or expired OTP",
                 success: false
@@ -147,18 +152,19 @@ export const resetPassword = async (req, res) => {
         }
 
         user.password = await bcrypt.hash(newPassword, 10);
-        user.otp = null;
-        user.otpExpiry = null;
         await user.save();
+
+        User.otp = null;
+        User.otpExpiry = null;
 
         return res.status(200).json({
             message: "Password reset successfully",
             success: true
         });
     } catch (error) {
-        console.error(error);
         res.status(500).json({
-            message: "Server error",
+            message: "Server error in reset password api",
+            error: error.message,
             success: false
         });
     }
@@ -176,7 +182,7 @@ export const login = async (req, res) => {
         let user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({
-                message: "Incorrect email and password",
+                message: "User not found",
                 success: false,
             });
         }
@@ -184,7 +190,7 @@ export const login = async (req, res) => {
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if (!isPasswordMatch) {
             return res.status(400).json({
-                message: "Incorrect email and password",
+                message: "Incorrect password",
                 success: false,
             });
         }
@@ -216,25 +222,90 @@ export const login = async (req, res) => {
                 success: true,
             });
     } catch (error) {
-        console.log(error);
+        res.status(500).json({
+            message: "Server error in login api",
+            error: error.message,
+            success: false
+        });
     }
 };
 
 export const logout = async (req, res) => {
     try {
+
+        const userId = req.id;
+        let user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(400).json({
+                message: "User not Authenticated",
+                success: false,
+            });
+        }
+
         return res.status(200).cookie("token", "", { maxAge: 0 }).json({
             message: "Logged out successfully",
             success: true,
         });
     } catch (error) {
-        console.log(error);
+        res.status(500).json({
+            message: "Server error in logout api",
+            error: error.message,
+            success: false
+        });
+    }
+};
+
+export const deleteAccount = async (req, res) => {
+    try {
+        const { password } = req.body;
+        const userId = req.id;
+
+        if (!password) {
+            return res.status(400).json({
+                message: "Password is required to delete the account",
+                success: false,
+            });
+        }
+
+        let user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+                success: false,
+            });
+        }
+
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        if (!isPasswordMatch) {
+            return res.status(400).json({
+                message: "Incorrect password",
+                success: false,
+            });
+        }
+
+        await User.findByIdAndDelete(userId);
+
+        res.clearCookie("token");
+
+        return res.status(200).json({
+            message: "Account deleted successfully",
+            success: true,
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Server error in delete account API",
+            error: error.message,
+            success: false
+        });
     }
 };
 
 export const updateProfile = async (req, res) => {
     try {
-        const { name, email, bio } = req.body;
-        const userId = req.id; //middleware authentication
+        const { name, bio } = req.body;
+        const userId = req.id;
         let user = await User.findById(userId);
 
         if (!user) {
@@ -244,9 +315,7 @@ export const updateProfile = async (req, res) => {
             });
         }
 
-        // updating data
         if (name) user.name = name;
-        if (email) user.email = email;
         if (bio) user.profile.bio = bio;
 
         await user.save();
@@ -264,6 +333,10 @@ export const updateProfile = async (req, res) => {
             success: true,
         });
     } catch (error) {
-        console.log(error);
+        res.status(500).json({
+            message: "Server error in update profile api",
+            error: error.message,
+            success: false
+        });
     }
 };
