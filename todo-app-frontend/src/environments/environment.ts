@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  baseUrl: 'http://localhost:4200',
+  app_name: 'todoApp',
+  app_version_code: '001',
 };
 
 /*
