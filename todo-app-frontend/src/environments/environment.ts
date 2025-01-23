@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'http://localhost:4200',
+  baseUrl: 'http://localhost:8000',
   app_name: 'todoApp',
   app_version_code: '001',
 };
