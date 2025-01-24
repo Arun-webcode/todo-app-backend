@@ -10,7 +10,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonImg, IonContent, CommonModule, FormsModule, SignupComponent],
+  imports: [IonContent, CommonModule, FormsModule, SignupComponent],
 })
 export class HomePage implements OnInit {
 

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {
-  IonCard, IonLabel, IonCardHeader, IonCardSubtitle, IonCardContent,
-  IonCardTitle, IonItem, IonButton, IonIcon, IonInput
+  IonCard, IonCardHeader, IonCardSubtitle, IonCardContent,
+  IonCardTitle, IonButton, IonInput
 } from '@ionic/angular/standalone';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-signup',
@@ -14,8 +14,8 @@ import {
   styleUrls: ['./signup.component.scss'],
   standalone: true,
   imports: [
-    IonInput, IonIcon, IonButton, IonItem, IonCardTitle, IonCardContent,
-    IonCardSubtitle, IonCardHeader, IonLabel, IonCard, FormsModule, CommonModule
+    IonInput, IonButton, IonCardTitle, IonCardContent,
+    IonCardSubtitle, IonCardHeader, IonCard, FormsModule, CommonModule
   ]
 })
 export class SignupComponent implements OnInit {
@@ -26,42 +26,39 @@ export class SignupComponent implements OnInit {
   confirmPassword = '';
   name = '';
 
-  showOtpInput = false;
+  passwordError = false;
   showPasswordInputs = false;
   otpError = false;
+  nameError = false;
 
   passwordType = 'password';
   passwordIcon = 'eye-off';
 
   constructor(
-    private toastController: ToastController,
-    private authService: AuthService
+    private authService: AuthService,
+    public commonService: CommonService
   ) { }
 
   ngOnInit(): void {
-    // Initialization logic if needed
   }
 
   async sendOtp(): Promise<void> {
-    try {
-      await this.authService.sendOtp('arun.webcode@gmail.com');
-      this.showOtpInput = true;
-      this.presentToast('OTP sent to your email');
-    } catch (error) {
-      this.presentToast('Failed to send OTP', 'danger');
+    if (!this.email || this.email.trim() === '') {
+      this.commonService.presentToast('Please enter a valid email address.', 'danger');
+      this.showPasswordInputs = false;
+      return;
     }
-  }
-
-  async verifyOtp(): Promise<void> {
-    // Replace this with actual OTP verification logic, this is just a placeholder
-    const isOtpValid = await this.mockOtpVerification(this.otp);
-    if (isOtpValid) {
-      this.otpError = false;
+    try {
+      const res = await this.authService.sendOtp(this.email);
       this.showPasswordInputs = true;
-      this.presentToast('OTP verified successfully');
-    } else {
-      this.otpError = true;
-      this.presentToast('Invalid OTP', 'danger');
+      this.commonService.presentToast(res.message);
+    } catch (error: any) {
+      if (error && error.error.message) {
+        console.error(error.error.error);
+        this.commonService.presentToast(error.error.message, 'danger');
+      } else {
+        this.commonService.presentToast('An unexpected error occurred. Please try again.', 'danger');
+      }
     }
   }
 
@@ -71,16 +68,23 @@ export class SignupComponent implements OnInit {
   }
 
   async signup(): Promise<void> {
-    if (this.password === this.confirmPassword && this.password.length >= 6) {
+
+    if (this.password && this.password.length < 6 && !this.otp && !this.name) {
+      this.passwordError = true;
+      this.commonService.presentToast('Please fill all fields corrctly', 'danger');
+    }
+
+    if (this.password === this.confirmPassword) {
       try {
-        await this.authService.registerAccount(this.password, this.name, this.otp);
-        this.presentToast('Account registered successfully');
-        this.resetForm();
-      } catch (error) {
-        this.presentToast('Registration failed', 'danger');
+        const res = await this.authService.registerAccount(this.password, this.name, this.otp);
+        this.commonService.presentToast(res.message);
+        // this.resetForm();
+      } catch (error: any) {
+        console.error(error.error.error);
+        this.commonService.presentToast(error.error.message, 'danger');
       }
     } else {
-      this.presentToast('Passwords do not match or are too short', 'danger');
+      this.commonService.presentToast('Passwords not matching or too short', 'danger');
     }
   }
 
@@ -90,25 +94,6 @@ export class SignupComponent implements OnInit {
     this.password = '';
     this.confirmPassword = '';
     this.name = '';
-    this.showOtpInput = false;
     this.showPasswordInputs = false;
-  }
-
-  private async presentToast(message: string, color: string = 'success'): Promise<void> {
-    const toast = await this.toastController.create({
-      message,
-      duration: 2000,
-      color
-    });
-    toast.present();
-  }
-
-  private mockOtpVerification(otp: string): Promise<boolean> {
-    // Simulate OTP verification logic
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(otp === '123456'); // Replace with actual OTP validation logic
-      }, 1000);
-    });
   }
 }

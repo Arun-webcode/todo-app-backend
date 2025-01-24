@@ -36,7 +36,7 @@ export const register = async (req, res) => {
         });
     } catch (error) {
         return res.status(500).json({
-            message: "Server error of register api",
+            message: "Enter a valid email",
             error: error.message,
             success: false
         });
@@ -124,7 +124,7 @@ export const sendResetPasswordOtp = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({
-            message: "Server error in sendResetPasswordOtp api",
+            message: "Server error",
             error: error.message,
             success: false
         });
@@ -163,7 +163,7 @@ export const resetPassword = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({
-            message: "Server error in reset password api",
+            message: "Server error",
             error: error.message,
             success: false
         });
@@ -223,7 +223,7 @@ export const login = async (req, res) => {
             });
     } catch (error) {
         res.status(500).json({
-            message: "Server error in login api",
+            message: "Server error",
             error: error.message,
             success: false
         });
@@ -249,7 +249,7 @@ export const logout = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({
-            message: "Server error in logout api",
+            message: "Server error",
             error: error.message,
             success: false
         });
@@ -295,7 +295,7 @@ export const deleteAccount = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({
-            message: "Server error in delete account API",
+            message: "Server error",
             error: error.message,
             success: false
         });
@@ -334,7 +334,7 @@ export const updateProfile = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({
-            message: "Server error in update profile api",
+            message: "Server error",
             error: error.message,
             success: false
         });
