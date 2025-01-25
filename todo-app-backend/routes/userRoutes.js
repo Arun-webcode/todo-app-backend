@@ -1,5 +1,5 @@
 import express from "express";
-import { deleteAccount, login, logout, register, resetPassword, sendResetPasswordOtp, updateProfile, verifyOtpAndCreateAccount } from "../controllers/userController.js";
+import { deleteAccount, getUserDetails, login, logout, register, resetPassword, sendResetPasswordOtp, updateProfile, verifyOtpAndCreateAccount } from "../controllers/userController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -12,5 +12,6 @@ router.route("/login").post(login);
 router.route("/logout").get(authMiddleware, logout);
 router.route("/deleteaccount").delete(authMiddleware, deleteAccount);
 router.route("/profile/update").put(authMiddleware, updateProfile);
+router.route("/getUserDetails").get(authMiddleware, getUserDetails);
 
 export default router;

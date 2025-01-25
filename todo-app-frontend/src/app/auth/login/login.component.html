@@ -1,3 +1,17 @@
-<p>
-  login works!
-</p>
+<ion-card>
+  <ion-card-header>
+    <ion-card-subtitle>Welcome to Todo</ion-card-subtitle>
+    <ion-card-title>Login</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <form (ngSubmit)="login()" #signupForm="ngForm">
+      <ion-input id="emailInput" errorText="Invalid email" email type="email" [(ngModel)]="email" name="email"
+        label="Email" label-placement="floating" fill="outline" placeholder="Enter your email" required></ion-input>
+
+      <ion-input id="passwordInput" [type]="passwordType" [(ngModel)]="password" name="password" label="Password"
+        label-placement="floating" fill="outline" placeholder="Enter Password" required></ion-input>
+
+      <ion-button expand="block" type="submit">Login</ion-button>
+    </form>
+  </ion-card-content>
+</ion-card>

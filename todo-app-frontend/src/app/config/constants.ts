@@ -7,7 +7,8 @@ export const ApiUrls = {
         resetPass: '/api/v1/user/resetpassword', //put
         login: '/api/v1/user/login', //post
         logout: '/api/v1/user/logout', //get
-        deleteAcc: '/api/v1/user/deleteaccount', //del
+        deleteAcc: '/api/v1/user/deleteaccount', //delete
+        getUserDetails: '/api/v1/user/getUserDetails' //get
     },
     task: {
         createTask: '/api/v1/tasks/createtask', //post

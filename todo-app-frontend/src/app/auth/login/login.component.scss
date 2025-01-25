@@ -1,0 +1,15 @@
+ion-card {
+    width: 95%;
+    height: 95%;
+    background: var(--ion-color-secondary-contrast);
+
+    ion-card-content {
+        ion-input {
+            min-height: 45px;
+        }
+
+        ion-button {
+            --border-color: var(--ion-color-secondary);
+        }
+    }
+}

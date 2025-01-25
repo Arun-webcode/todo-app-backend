@@ -28,8 +28,6 @@ export class SignupComponent implements OnInit {
 
   passwordError = false;
   showPasswordInputs = false;
-  otpError = false;
-  nameError = false;
 
   passwordType = 'password';
   passwordIcon = 'eye-off';
@@ -78,7 +76,8 @@ export class SignupComponent implements OnInit {
       try {
         const res = await this.authService.registerAccount(this.password, this.name, this.otp);
         this.commonService.presentToast(res.message);
-        // this.resetForm();
+
+        this.resetForm();
       } catch (error: any) {
         console.error(error.error.error);
         this.commonService.presentToast(error.error.message, 'danger');
