@@ -10,7 +10,7 @@ import { LoginComponent } from "../../auth/login/login.component";
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonContent, CommonModule, FormsModule, LoginComponent],
+  imports: [IonContent, CommonModule, FormsModule, LoginComponent, SignupComponent],
 })
 export class HomePage implements OnInit {
 
