@@ -35,3 +35,28 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+/* Custom Loading CSS */
+.custom-loader {
+    --spinner-color: var(--ion-color-primary-contrast) !important;
+    /* Ensure spinner color changes */
+}
+
+/* Change the backdrop color */
+.custom-loader::part(backdrop) {
+    background: rgba(0, 0, 255, 0.2);
+}
+
+/* Change the loading message color */
+.custom-loader::part(message) {
+    color: var(--ion-color-primary-contrast) !important;
+    font-weight: bold;
+}
+
+/* Change the loader box color */
+.custom-loader .loading-wrapper {
+    background: var(--ion-color-primary) !important;
+    color: var(--ion-color-primary-contrast) !important;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}

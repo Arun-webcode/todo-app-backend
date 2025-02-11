@@ -1,6 +1,6 @@
 <ion-content class="ion-padding" scroll-y="false" scroll-x="false">
   <div class="contentCenter login">
-    <app-login></app-login>
-    <!-- <app-signup></app-signup> -->
+    <app-login *ngIf="!isLogin" (sendDataToParent)="handleChildData($event)"></app-login>
+    <app-signup *ngIf="isLogin" (sendDataToParent)="handleChildData($event)"></app-signup>
   </div>
 </ion-content>

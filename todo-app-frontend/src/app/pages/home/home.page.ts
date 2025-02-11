@@ -13,10 +13,17 @@ import { LoginComponent } from "../../auth/login/login.component";
   imports: [IonContent, CommonModule, FormsModule, LoginComponent, SignupComponent],
 })
 export class HomePage implements OnInit {
+  isLogin = false;
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  handleChildData(data: string) {
+    if (data == 'false') {
+      this.isLogin = false;
+    } else this.isLogin = true;
   }
 
 }

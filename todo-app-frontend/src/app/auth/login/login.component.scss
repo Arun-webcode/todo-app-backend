@@ -12,5 +12,9 @@ ion-card {
         ion-button {
             --border-color: var(--ion-color-secondary);
         }
+
+        .login {
+            cursor: pointer;
+        }
     }
 }

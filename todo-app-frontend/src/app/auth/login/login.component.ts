@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { IonInput, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/angular/standalone';
+import { RouterLink } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { IonInput, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonLabel } from '@ionic/angular/standalone';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonService } from 'src/app/services/common.service';
 
@@ -11,12 +12,15 @@ import { CommonService } from 'src/app/services/common.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   standalone: true,
-  imports: [
+  imports: [IonLabel,
     IonInput, IonButton, IonCardTitle, IonCardContent,
-    IonCardSubtitle, IonCardHeader, IonCard, FormsModule, CommonModule
+    IonCardSubtitle, IonCardHeader, IonCard, FormsModule, CommonModule, RouterModule
   ]
 })
 export class LoginComponent implements OnInit {
+
+  @Output() sendDataToParent: EventEmitter<string> = new EventEmitter<string>();
+
   email = '';
   password = '';
   passwordType = 'password';
@@ -31,10 +35,6 @@ export class LoginComponent implements OnInit {
   ngOnInit() { }
 
   async login() {
-    if (!this.email && !this.password) {
-      this.commonService.presentToast('Please fill all fields corrctly', 'danger');
-    }
-
     try {
       const res = await this.authService.login(this.email, this.password);
       this.commonService.presentToast(res.message);
@@ -44,4 +44,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  goToLogin() {
+    this.sendDataToParent.emit("true");
+  }
 }
