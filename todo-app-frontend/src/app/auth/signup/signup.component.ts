@@ -47,12 +47,6 @@ export class SignupComponent implements OnInit {
 
   async sendOtp(): Promise<void> {
     this.commonService.presentLoading();
-    if (!this.email || this.email.trim() === '') {
-      this.commonService.presentToast('Please enter a valid email address.', 'danger');
-      this.showPasswordInputs = false;
-      this.commonService.dismissLoading();
-      return;
-    }
     try {
       const res = await this.authService.sendOtp(this.email);
       this.showPasswordInputs = true;
