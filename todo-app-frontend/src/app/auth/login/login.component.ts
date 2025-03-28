@@ -3,9 +3,11 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { IonicModule, ModalController } from '@ionic/angular';
 import { IonInput, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonLabel } from '@ionic/angular/standalone';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonService } from 'src/app/services/common.service';
+import { ResetComponent } from './reset/reset.component';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +16,7 @@ import { CommonService } from 'src/app/services/common.service';
   standalone: true,
   imports: [IonLabel,
     IonInput, IonButton, IonCardTitle, IonCardContent,
-    IonCardSubtitle, IonCardHeader, IonCard, FormsModule, CommonModule, RouterModule
+    IonCardSubtitle, IonCardHeader, IonCard, FormsModule, CommonModule, RouterModule, IonicModule
   ]
 })
 export class LoginComponent implements OnInit {
@@ -27,9 +29,10 @@ export class LoginComponent implements OnInit {
   passwordIcon = 'eye-off';
 
   constructor(
-    public routerLink: RouterLink,
-    public commonService: CommonService,
-    public authService: AuthService
+    private routerLink: RouterLink,
+    private commonService: CommonService,
+    private authService: AuthService,
+    private modelCtrl: ModalController
   ) { }
 
   ngOnInit() { }
@@ -46,5 +49,18 @@ export class LoginComponent implements OnInit {
 
   goToLogin() {
     this.sendDataToParent.emit("true");
+  }
+
+  async forgetPassword() {
+    const modal = await this.modelCtrl.create({
+      component: ResetComponent,
+      componentProps: {
+        working: 'reset'
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
   }
 }
