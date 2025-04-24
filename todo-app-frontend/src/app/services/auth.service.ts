@@ -25,7 +25,7 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}${ApiUrls.auth.resetOtp}`, { email }).toPromise();
   }
 
-  async resetPassword(otp: string, newPassword: string): Promise<any> {
+  async resetPassword(newPassword: string, otp: string): Promise<any> {
     const body = { otp, newPassword };
     return this.http.put(`${this.baseUrl}${ApiUrls.auth.resetPass}`, body).toPromise();
   }

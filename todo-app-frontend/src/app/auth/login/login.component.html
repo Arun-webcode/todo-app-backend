@@ -1,4 +1,4 @@
-<ion-card>
+<ion-card *ngIf="!isForget">
   <ion-card-header>
     <ion-card-subtitle>Welcome to Todo</ion-card-subtitle>
     <ion-card-title>Login</ion-card-title>
@@ -13,8 +13,39 @@
 
       <ion-button expand="block" type="submit">Login</ion-button>
     </form>
-    <ion-button fill="clear"> Forget Password </ion-button> <br>
+    <ion-button fill="clear" (click)="forgetPassword()"> Forget Password </ion-button> <br>
     <ion-label>Don't have an account? <ion-label color="primary" class="login" (click)="goToLogin()"> Sign Up
+      </ion-label>👈</ion-label>
+  </ion-card-content>
+</ion-card>
+
+<ion-card *ngIf="isForget">
+  <ion-card-header>
+    <ion-card-subtitle>Welcome to Todo</ion-card-subtitle>
+    <ion-card-title>Forget Password</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <form (ngSubmit)="forget()" #signupForm="ngForm">
+      <ion-input id="emailInput" errorText="Invalid email" email type="email" [(ngModel)]="email" name="email"
+        label="Email" label-placement="floating" fill="outline" placeholder="Enter your email" required></ion-input>
+      <ion-button *ngIf="!showPasswordInputs" fill="outline" expand="block" type="button" (click)="sendOtp()">Send
+        OTP</ion-button>
+
+      <ion-input *ngIf="showPasswordInputs" id="otpInput" type="number" [(ngModel)]="otp" name="otp" label="Otp"
+        label-placement="floating" fill="outline" placeholder="Enter OTP" required></ion-input>
+
+      <ion-input *ngIf="showPasswordInputs" id="passwordInput" [type]="passwordType" [(ngModel)]="password"
+        name="password" label="New Password" label-placement="floating" fill="outline" placeholder="Enter New Password"
+        required></ion-input>
+
+      <ion-input *ngIf="showPasswordInputs" id="confirmPasswordInput" type="password" [(ngModel)]="confirmPassword"
+        name="confirmpassword" label="Confirm New Password" label-placement="floating" fill="outline"
+        placeholder="Confirm New Password" required></ion-input>
+
+      <ion-button *ngIf="showPasswordInputs" expand="block" type="submit">Reset</ion-button>
+    </form>
+    <ion-label>Remembered password? <ion-label class="login" color="primary" (click)="forgetToLogin()">
+        Login
       </ion-label>👈</ion-label>
   </ion-card-content>
 </ion-card>

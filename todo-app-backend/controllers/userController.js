@@ -124,7 +124,7 @@ export const sendResetPasswordOtp = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({
-            message: "Server error",
+            message: "Enter a valid email",
             error: error.message,
             success: false
         });
@@ -144,7 +144,7 @@ export const resetPassword = async (req, res) => {
         const email = User.email;
         const user = await User.findOne({ email });
 
-        if (!user || User.otp !== otp || User.otpExpiry < Date.now()) {
+        if (!user || User.otp != otp || User.otpExpiry < Date.now()) {
             return res.status(400).json({
                 message: "Invalid or expired OTP",
                 success: false
