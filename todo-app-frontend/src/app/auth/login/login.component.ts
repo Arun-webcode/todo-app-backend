@@ -3,16 +3,18 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { IonInput, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonLabel } from '@ionic/angular/standalone';
+import { IonInput, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonLabel, IonHeader, IonContent, IonToolbar, IonTitle } from '@ionic/angular/standalone';
+import { Constants } from 'src/app/config/constants';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonService } from 'src/app/services/common.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   standalone: true,
-  imports: [IonLabel,
+  imports: [IonTitle, IonToolbar, IonContent, IonHeader, IonLabel,
     IonInput, IonButton, IonCardTitle, IonCardContent,
     IonCardSubtitle, IonCardHeader, IonCard, FormsModule, CommonModule, RouterModule
   ],
@@ -35,6 +37,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private commonService: CommonService,
     private authService: AuthService,
+    private modalCtrl: ModalController,
+    private storageService: StorageService
   ) { }
 
   ngOnInit() { }
@@ -43,14 +47,20 @@ export class LoginComponent implements OnInit {
     try {
       const res = await this.authService.login(this.email, this.password);
       this.commonService.presentToast(res.message);
+      await this.storageService.setItem(Constants.USER_LOGIN, res.success);
+      await this.storageService.setItem(Constants.USER_EMAIL, res.user.email);
+      await this.storageService.setItem(Constants.USER_NAME, res.user.name);
+      await this.storageService.setItem(Constants.USER_ID, res.user._id);
+      // this.storageService.setItem(Constants.USER_PROFILE_URL, this.isLogin);      
+      await this.modalCtrl.dismiss(res);
     } catch (error: any) {
       console.error(error.error.error);
       this.commonService.presentToast(error.error.message, 'danger');
     }
   }
 
-  goToLogin() {
-    this.sendDataToParent.emit("true");
+  async goToSignup() {
+    await this.modalCtrl.dismiss('signup');
   }
 
   forgetToLogin() {
@@ -62,29 +72,29 @@ export class LoginComponent implements OnInit {
   }
 
   async sendOtp(): Promise<void> {
-    this.commonService.presentLoading();
+    await this.commonService.presentLoading();
     try {
       const res = await this.authService.sendResetPasswordOtp(this.email);
       this.showPasswordInputs = true;
-      this.commonService.dismissLoading();
+      await this.commonService.dismissLoading();
       this.commonService.presentToast(res.message);
     } catch (error: any) {
       if (error && error.error.message) {
         console.error(error.error.error);
         this.commonService.presentToast(error.error.message, 'danger');
-        this.commonService.dismissLoading();
+        await this.commonService.dismissLoading();
       } else {
         this.commonService.presentToast('An unexpected error occurred. Please try again.', 'danger');
-        this.commonService.dismissLoading();
+        await this.commonService.dismissLoading();
       }
     }
   }
 
   async forget(): Promise<void> {
-    this.commonService.presentLoading();
+    await this.commonService.presentLoading();
     if (this.password && this.password.length < 6 && !this.otp) {
       this.passwordError = true;
-      this.commonService.dismissLoading();
+      await this.commonService.dismissLoading();
       this.commonService.presentToast('Please fill all fields corrctly', 'danger');
     }
 
@@ -94,16 +104,16 @@ export class LoginComponent implements OnInit {
         this.commonService.presentToast(res.message);
         if (res.success) {
           this.isForget = false
-          this.commonService.dismissLoading();
+          await this.commonService.dismissLoading();
         }
         this.resetForm();
       } catch (error: any) {
         console.error(error.error.error);
-        this.commonService.dismissLoading();
+        await this.commonService.dismissLoading();
         this.commonService.presentToast(error.error.message, 'danger');
       }
     } else {
-      this.commonService.dismissLoading();
+      await this.commonService.dismissLoading();
       this.commonService.presentToast('Passwords not matching or too short', 'danger');
     }
   }

@@ -1,6 +1,22 @@
-<ion-content class="ion-padding" scroll-y="false" scroll-x="false">
-  <div class="contentCenter login">
-    <app-login *ngIf="!isLogin" (sendDataToParent)="handleChildData($event)"></app-login>
-    <app-signup *ngIf="isLogin" (sendDataToParent)="handleChildData($event)"></app-signup>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Motivated ToDo</ion-title>
+    <ion-buttons slot="end" *ngIf="!isLogin">
+      <ion-button (click)="signup()">Sign Up</ion-button>
+      <ion-button (click)="login()">Login</ion-button>
+    </ion-buttons>
+    <ion-chip slot="end" *ngIf="isLogin" (click)="openUserMenu($event)">
+      <ion-avatar>
+        <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+      </ion-avatar>
+      <ion-label>{{name}}</ion-label>
+    </ion-chip>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Motivational Quote Section -->
+  <div class="quote-container" *ngIf="!isLogin">
+    <h2>"{{ currentQuote }}"</h2>
   </div>
 </ion-content>

@@ -1,32 +1,42 @@
-<ion-card>
-  <ion-card-header>
-    <ion-card-subtitle>Welcome to Todo</ion-card-subtitle>
-    <ion-card-title>Signup</ion-card-title>
-  </ion-card-header>
-  <ion-card-content>
-    <form (ngSubmit)="signup()" #signupForm="ngForm">
-      <ion-input id="emailInput" errorText="Invalid email" email type="email" [(ngModel)]="email" name="email"
-        label="Email" label-placement="floating" fill="outline" placeholder="Enter your email" required></ion-input>
-      <ion-button *ngIf="!showPasswordInputs" fill="outline" expand="block" type="button" (click)="sendOtp()">Send
-        OTP</ion-button>
+<ion-header mode="ios">
+  <ion-toolbar color="primary">
+    <ion-title>Signup</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-      <ion-input *ngIf="showPasswordInputs" id="otpInput" type="number" [(ngModel)]="otp" name="otp" label="Otp"
-        label-placement="floating" fill="outline" placeholder="Enter OTP" required></ion-input>
+<ion-content mode="ios">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>Welcome to Todo</ion-card-subtitle>
+      <ion-card-title>Create Account</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form (ngSubmit)="signup()" #signupForm="ngForm">
+        <ion-input type="email" [(ngModel)]="email" name="email" label="Email" label-placement="floating" fill="outline"
+          placeholder="Enter your email" required></ion-input>
+        <ion-button *ngIf="!showPasswordInputs" fill="outline" expand="block" type="button" (click)="sendOtp()">Send
+          OTP</ion-button>
 
-      <ion-input *ngIf="showPasswordInputs" id="passwordInput" [type]="passwordType" [(ngModel)]="password"
-        name="password" label="New Password" label-placement="floating" fill="outline" placeholder="Enter New Password"
-        required></ion-input>
+        <ion-input *ngIf="showPasswordInputs" type="number" [(ngModel)]="otp" name="otp" label="OTP"
+          label-placement="floating" fill="outline" placeholder="Enter OTP" required></ion-input>
 
-      <ion-input *ngIf="showPasswordInputs" id="confirmPasswordInput" type="password" [(ngModel)]="confirmPassword"
-        name="confirmpassword" label="Confirm New Password" label-placement="floating" fill="outline"
-        placeholder="Confirm New Password" required></ion-input>
+        <ion-input *ngIf="showPasswordInputs" [type]="passwordType" [(ngModel)]="password" name="password"
+          label="New Password" label-placement="floating" fill="outline" placeholder="Enter New Password"
+          required></ion-input>
 
-      <ion-input *ngIf="showPasswordInputs" id="nameInput" type="text" [(ngModel)]="name" name="name" label="Name"
-        label-placement="floating" fill="outline" placeholder="Enter Your Name" required></ion-input>
+        <ion-input *ngIf="showPasswordInputs" type="password" [(ngModel)]="confirmPassword" name="confirmpassword"
+          label="Confirm New Password" label-placement="floating" fill="outline" placeholder="Confirm New Password"
+          required></ion-input>
 
-      <ion-button *ngIf="showPasswordInputs" expand="block" type="submit">Signup</ion-button>
-    </form>
-    <ion-label>Have already an account? <ion-label color="primary" class="signup" (click)="goToLogin()"> Login
-      </ion-label>👈</ion-label>
-  </ion-card-content>
-</ion-card>
+        <ion-input *ngIf="showPasswordInputs" type="text" [(ngModel)]="name" name="name" label="Name"
+          label-placement="floating" fill="outline" placeholder="Enter Your Name" required></ion-input>
+
+        <ion-button *ngIf="showPasswordInputs" expand="block" type="submit">Signup</ion-button>
+      </form>
+
+      <ion-label>Already have an account? <ion-label class="login" color="primary" (click)="goToLogin()">
+          Login
+        </ion-label>👈</ion-label>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

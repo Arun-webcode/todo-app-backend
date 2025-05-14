@@ -1,6 +1,8 @@
+ion-content {
+    --background: var(--ion-color-light-shade);
+}
+
 ion-card {
-    width: 95%;
-    height: 95%;
     background: var(--ion-color-secondary-contrast);
 
     ion-card-content {

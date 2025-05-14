@@ -1,11 +1,16 @@
+ion-content {
+    --background: var(--ion-color-light-shade);
+}
+
 ion-card {
-    width: 95%;
-    height: 95%;
     background: var(--ion-color-secondary-contrast);
 
     ion-card-content {
+        form {
+            margin-bottom: 15px;
+        }
+
         ion-input {
-            min-height: 45px;
             margin-bottom: 10px;
         }
 
@@ -13,7 +18,7 @@ ion-card {
             --border-color: var(--ion-color-secondary);
         }
 
-        .signup {
+        .login {
             cursor: pointer;
         }
     }

@@ -1,3 +1,12 @@
+export class Constants {
+    public static readonly USER_EMAIL = 'user-email';
+    public static readonly USER_NAME = 'user-name';
+    public static readonly USER_ID = 'user-id';
+    public static readonly USER_PROFILE_URL = 'user-profile-url';
+    public static readonly USER_LOGIN = 'user-login';
+}
+
+
 export const ApiUrls = {
     profileUpdate: '/api/v1/user/profile/update', //put
     auth: {

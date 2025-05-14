@@ -10,7 +10,9 @@ export class AuthService {
 
   private baseUrl = environment.baseUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient
+  ) { }
 
   async sendOtp(email: string): Promise<any> {
     return this.http.post(`${this.baseUrl}${ApiUrls.auth.otpGen}`, { email }).toPromise();
