@@ -4,6 +4,7 @@ export class Constants {
     public static readonly USER_ID = 'user-id';
     public static readonly USER_PROFILE_URL = 'user-profile-url';
     public static readonly USER_LOGIN = 'user-login';
+    public static readonly AUTH_TOKEN = 'auth-token';
 }
 
 

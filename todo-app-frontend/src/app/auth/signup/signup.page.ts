@@ -11,17 +11,18 @@ import {
   ModalController
 } from '@ionic/angular/standalone';
 import { CommonService } from 'src/app/services/common.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
-  templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss'],
+  templateUrl: './signup.page.html',
+  styleUrls: ['./signup.page.scss'],
   standalone: true,
   imports: [IonHeader, IonLabel,
     IonInput, IonButton, IonCardTitle, IonCardContent, IonCardSubtitle, IonCardHeader, IonCard, IonContent, IonTitle, IonToolbar, FormsModule, CommonModule
   ]
 })
-export class SignupComponent implements OnInit {
+export class SignupPage implements OnInit {
 
   email = '';
   otp = '';
@@ -36,14 +37,15 @@ export class SignupComponent implements OnInit {
   constructor(
     private authService: AuthService,
     public commonService: CommonService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
   }
 
   goToLogin() {
-    this.modalCtrl.dismiss('login');
+    this.router.navigate(['login']);
   }
 
   async sendOtp(): Promise<void> {
@@ -106,4 +108,5 @@ export class SignupComponent implements OnInit {
     this.name = '';
     this.showPasswordInputs = false;
   }
+
 }

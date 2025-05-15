@@ -13,7 +13,6 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideHttpClient(),
     RouterLink,
-    provideIonicAngular({ mode: 'ios' }),
     Storage
   ],
 });

@@ -1,0 +1,29 @@
+ion-content {
+    --background: var(--ion-color-primary-contrast);
+}
+
+.modal-content {
+    background: var(--ion-color-primary-contrast);
+    ;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .form-container {
+        width: 100%;
+        max-width: 90%;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        ion-input {
+            --color: var(--ion-color-dark-tint);
+        }
+    }
+
+    .confirm-btn {
+        margin-top: 10px;
+    }
+}

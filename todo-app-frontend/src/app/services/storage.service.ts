@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
+import { Constants } from '../config/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +31,9 @@ export class StorageService {
 
   async clearAll(): Promise<void> {
     await this.storage.clear();
+  }
+
+  async isLoggedIn() {
+    return await this.storage.get(Constants.AUTH_TOKEN);
   }
 }

@@ -1,0 +1,20 @@
+<ion-header class="modal-header">
+  <ion-toolbar color="primary">
+    <ion-title>Delete Account</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="dismiss()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding modal-content">
+  <div class="form-container">
+    <ion-input id="passwordInput" type="password" [(ngModel)]="password" name="password" label="Password"
+      label-placement="floating" fill="outline" placeholder="Enter Password" required></ion-input>
+
+    <ion-button expand="block" color="primary" shape="round" class="confirm-btn" (click)="dismiss(true)"
+      [disabled]="!password">
+      Confirm Delete
+    </ion-button>
+  </div>
+</ion-content>

@@ -1,11 +1,7 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title>Motivated ToDo</ion-title>
-    <ion-buttons slot="end" *ngIf="!isLogin">
-      <ion-button (click)="signup()">Sign Up</ion-button>
-      <ion-button (click)="login()">Login</ion-button>
-    </ion-buttons>
-    <ion-chip slot="end" *ngIf="isLogin" (click)="openUserMenu($event)">
+    <ion-chip slot="end" (click)="openUserMenu($event)">
       <ion-avatar>
         <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
       </ion-avatar>
@@ -16,7 +12,7 @@
 
 <ion-content class="ion-padding">
   <!-- Motivational Quote Section -->
-  <div class="quote-container" *ngIf="!isLogin">
+  <div class="quote-container">
     <h2>"{{ currentQuote }}"</h2>
   </div>
 </ion-content>
