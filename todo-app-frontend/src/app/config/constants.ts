@@ -5,6 +5,8 @@ export class Constants {
     public static readonly USER_PROFILE_URL = 'user-profile-url';
     public static readonly USER_LOGIN = 'user-login';
     public static readonly AUTH_TOKEN = 'auth-token';
+    public static readonly LAST_TASK_PRIORITY = 'last-task-priority';
+
 }
 
 

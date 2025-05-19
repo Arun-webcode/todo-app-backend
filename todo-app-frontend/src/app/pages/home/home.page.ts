@@ -9,6 +9,7 @@ import { UserMenuPopoverComponent } from 'src/app/components/user-menu-popover/u
 import { AuthService } from 'src/app/services/auth.service';
 import { DeleteAccountModalComponent } from 'src/app/components/delete-account-modal/delete-account-modal.component';
 import { IonicModule } from '@ionic/angular';
+import { TaskService } from 'src/app/services/task.service';
 
 @Component({
   selector: 'app-home',
@@ -30,6 +31,9 @@ export class HomePage implements OnInit {
   quoteIndex: number = 0;
   name = '';
   email = '';
+  tasks: any[] = [];
+  newTask = { title: '', description: '', priority: 'Medium' };
+  editingTaskId: string | null = null;
 
   constructor(
     public routerLink: RouterLink,
@@ -37,7 +41,8 @@ export class HomePage implements OnInit {
     private popoverCtrl: PopoverController,
     private router: Router,
     private authService: AuthService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private taskService: TaskService
   ) { }
 
   ngOnInit() {
@@ -46,6 +51,68 @@ export class HomePage implements OnInit {
 
   async ionViewWillEnter() {
     await this.getUserData();
+    this.loadTasks();
+  }
+
+  loadTasks() {
+    this.taskService.getAllTasks().subscribe({
+      next: (res) => {
+        this.tasks = res.tasks || [];
+      },
+      error: (err) => {
+        console.error('Failed to load tasks', err);
+      }
+    });
+  }
+
+  addTask() {
+    if (this.editingTaskId) {
+      // Update existing task
+      this.taskService.updateTask(this.editingTaskId, this.newTask).subscribe({
+        next: () => {
+          this.editingTaskId = null;
+          this.newTask = { title: '', description: '', priority: 'Medium' };
+          this.loadTasks();
+        },
+        error: (err) => alert('Failed to update task: ' + err.error?.message)
+      });
+    } else {
+      // Create new task
+      this.taskService.createTask(this.newTask).subscribe({
+        next: () => {
+          this.newTask = { title: '', description: '', priority: 'Medium' };
+          this.loadTasks();
+        },
+        error: (err) => alert('Failed to add task: ' + err.error?.message)
+      });
+    }
+  }
+
+  editTask(task: any) {
+    this.editingTaskId = task._id;
+    this.newTask = {
+      title: task.title,
+      description: task.description,
+      priority: task.priority
+    };
+  }
+
+  deleteTask(taskId: string) {
+    if (confirm('Are you sure you want to delete this task?')) {
+      this.taskService.deleteTask(taskId).subscribe({
+        next: () => this.loadTasks(),
+        error: (err) => alert('Failed to delete task: ' + err.error?.message)
+      });
+    }
+  }
+
+  getPriorityColor(priority: string): string {
+    switch (priority) {
+      case 'High': return 'danger';
+      case 'Medium': return 'warning';
+      case 'Low': return 'success';
+      default: return '';
+    }
   }
 
   async openUserMenu(ev: Event) {

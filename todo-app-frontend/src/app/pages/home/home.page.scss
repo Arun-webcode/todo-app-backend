@@ -22,3 +22,20 @@ ion-content {
 ion-item {
     margin-bottom: 10px;
 }
+
+.todo-container {
+    max-width: 600px;
+    margin: 30px auto 0;
+}
+
+ion-card {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+}
+
+.no-tasks {
+    text-align: center;
+    color: #888;
+    margin: 20px 0;
+    font-style: italic;
+}

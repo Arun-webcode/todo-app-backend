@@ -15,4 +15,55 @@
   <div class="quote-container">
     <h2>"{{ currentQuote }}"</h2>
   </div>
+
+  <!-- ToDo List Section -->
+  <div class="todo-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>My Tasks</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <!-- Add Task Form -->
+        <form (ngSubmit)="addTask()" #taskForm="ngForm">
+          <ion-item>
+            <ion-input [(ngModel)]="newTask.title" name="title" placeholder="Task Title" required></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input [(ngModel)]="newTask.description" name="description" placeholder="Description"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-select [(ngModel)]="newTask.priority" name="priority" placeholder="Priority">
+              <ion-select-option value="Low">Low</ion-select-option>
+              <ion-select-option value="Medium">Medium</ion-select-option>
+              <ion-select-option value="High">High</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-button expand="block" type="submit" [disabled]="!taskForm.form.valid">Add Task</ion-button>
+        </form>
+
+        <!-- Task List -->
+        <ion-list *ngIf="tasks.length; else noTasks">
+          <ion-item-sliding *ngFor="let task of tasks">
+            <ion-item [color]="getPriorityColor(task.priority)">
+              <ion-label>
+                <h2>{{ task.title }}</h2>
+                <p>{{ task.description }}</p>
+                <ion-badge slot="end">{{ task.priority }}</ion-badge>
+              </ion-label>
+              <ion-button fill="clear" slot="end" (click)="editTask(task)">
+                <ion-icon name="create-outline"></ion-icon>
+              </ion-button>
+              <ion-button fill="clear" color="danger" slot="end" (click)="deleteTask(task._id)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-item-sliding>
+        </ion-list>
+        <ng-template #noTasks>
+          <div class="no-tasks">No tasks yet. Start by adding one!</div>
+        </ng-template>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
 </ion-content>
