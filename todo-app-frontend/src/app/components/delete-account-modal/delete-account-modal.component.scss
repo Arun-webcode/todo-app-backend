@@ -11,12 +11,12 @@ ion-content {
     justify-content: center;
 
     .form-container {
-        width: 100%;
-        max-width: 90%;
+        width: 90%;
         margin: auto;
         display: flex;
         flex-direction: column;
         gap: 20px;
+        margin-top: 20px;
 
         ion-input {
             --color: var(--ion-color-dark-tint);

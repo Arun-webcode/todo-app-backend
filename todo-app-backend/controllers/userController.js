@@ -3,6 +3,7 @@ import { sendEmail } from "../config/sendOtp.js";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
+import { Otp } from "../models/otp.modal.js";
 
 export const register = async (req, res) => {
     try {
@@ -17,18 +18,24 @@ export const register = async (req, res) => {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({
-                message: "User already exists", success: false
+                message: "User already exists",
+                success: false
             });
         }
 
         const otp = crypto.randomInt(100000, 999999).toString();
-        const otpExpiry = Date.now() + 5 * 60 * 1000;
+        const otpExpiry = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
 
-        User.otp = otp;
-        User.otpExpiry = otpExpiry;
-        User.email = email;
+        await Otp.deleteMany({ email });
 
-        await sendEmail(email, "Todo App OTP Code", `Otp verification code for Todo App is ${otp} and is valid for 5 minutes. Please don't share with anyone`);
+        await Otp.create({ email, otp, otpExpiry });
+
+        // Send OTP via email
+        await sendEmail(
+            email,
+            "Todo App OTP Code",
+            `Otp verification code for Todo App is ${otp} and is valid for 5 minutes. Please don't share with anyone.`
+        );
 
         return res.status(200).json({
             message: "OTP sent to your email",
@@ -36,7 +43,7 @@ export const register = async (req, res) => {
         });
     } catch (error) {
         return res.status(500).json({
-            message: "Enter a valid email",
+            message: "Server error",
             error: error.message,
             success: false
         });
@@ -45,24 +52,32 @@ export const register = async (req, res) => {
 
 export const verifyOtpAndCreateAccount = async (req, res) => {
     try {
-        const { name, otp, password } = req.body;
-
-        if (!name || !otp || !password) {
+        const { email, name, otp, password } = req.body;
+        if (!email || !name || !otp || !password) {
             return res.status(400).json({
                 message: "All fields are required",
                 success: false
             });
         }
-        const email = User.email;
-        const existedUser = await User.findOne({ email });
-        if (existedUser) {
+
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
             return res.status(400).json({
-                message: "Email already existed",
+                message: "Email already registered",
                 success: false
             });
         }
 
-        if (User.otp != otp || User.otpExpiry < Date.now()) {
+        const otpRecord = await Otp.findOne({ email });
+        const otpExpiryTime = new Date(otpRecord.otpExpiry).getTime();
+        if (!otpRecord) {
+            return res.status(400).json({
+                message: "OTP not found or expired",
+                success: false
+            });
+        }
+
+        if (otpRecord.otp != otp || otpExpiryTime < Date.now()) {
             return res.status(400).json({
                 message: "Invalid or expired OTP",
                 success: false
@@ -71,21 +86,19 @@ export const verifyOtpAndCreateAccount = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
         await User.create({
+            name,
             email,
-            password: hashedPassword,
-            name
+            password: hashedPassword
         });
 
-        User.otp = null;
-        User.otpExpiry = null;
-
+        await Otp.deleteOne({ email });
         return res.status(201).json({
             message: "Account created successfully",
             success: true
         });
 
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             message: "Server error",
             error: error.message,
             success: false
@@ -112,19 +125,23 @@ export const sendResetPasswordOtp = async (req, res) => {
         }
 
         const otp = crypto.randomInt(100000, 999999).toString();
-        User.otp = otp;
-        User.otpExpiry = Date.now() + 5 * 60 * 1000;
-        User.email = email;
+        const otpExpiry = new Date(Date.now() + 5 * 60 * 1000); // 5 min
 
-        await sendEmail(email, "Todo Password Reset OTP", `Otp reset verification code of Todo App is ${otp} . and is valid for 5 minutes. Please don't share with anyone.`);
+        await Otp.deleteMany({ email });
+        await Otp.create({ email, otp, otpExpiry });
+        await sendEmail(
+            email,
+            "Todo App Password Reset OTP",
+            `Your password reset OTP for Todo App is ${otp}. It is valid for 5 minutes. Please do not share it with anyone.`
+        );
 
-        res.status(200).json({
+        return res.status(200).json({
             message: "OTP sent to your email",
             success: true
         });
     } catch (error) {
-        res.status(500).json({
-            message: "Enter a valid email",
+        return res.status(500).json({
+            message: "Failed to send OTP",
             error: error.message,
             success: false
         });
@@ -133,36 +150,39 @@ export const sendResetPasswordOtp = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
     try {
-        const { otp, newPassword } = req.body;
-        if (!otp || !newPassword) {
+        const { email, otp, newPassword } = req.body;
+        if (!email || !otp || !newPassword) {
             return res.status(400).json({
                 message: "All fields are required",
                 success: false
             });
         }
 
-        const email = User.email;
-        const user = await User.findOne({ email });
-
-        if (!user || User.otp != otp || User.otpExpiry < Date.now()) {
+        const otpRecord = await Otp.findOne({ email });
+        if (!otpRecord || otpRecord.otp != otp || otpRecord.otpExpiry < Date.now()) {
             return res.status(400).json({
                 message: "Invalid or expired OTP",
                 success: false
             });
         }
 
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+                success: false
+            });
+        }
+
         user.password = await bcrypt.hash(newPassword, 10);
         await user.save();
-
-        User.otp = null;
-        User.otpExpiry = null;
-
+        await Otp.deleteOne({ email });
         return res.status(200).json({
             message: "Password reset successfully",
             success: true
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             message: "Server error",
             error: error.message,
             success: false
@@ -179,7 +199,8 @@ export const login = async (req, res) => {
                 success: false,
             });
         }
-        let user = await User.findOne({ email });
+
+        const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({
                 message: "User not found",
@@ -195,14 +216,12 @@ export const login = async (req, res) => {
             });
         }
 
-        const tokenData = {
-            userId: user._id,
-        };
-        const token = await jwt.sign(tokenData, process.env.SECRET_KEY, {
+        const tokenData = { userId: user._id };
+        const token = jwt.sign(tokenData, process.env.SECRET_KEY, {
             expiresIn: "1d",
         });
 
-        user = {
+        const userData = {
             _id: user._id,
             name: user.name,
             email: user.email,
@@ -211,17 +230,22 @@ export const login = async (req, res) => {
 
         return res
             .status(200)
+            .cookie("token", token, {
+                maxAge: 24 * 60 * 60 * 1000,
+                httpOnly: true,
+                sameSite: "lax",
+            })
             .json({
                 message: `Welcome back ${user.name}`,
                 token,
-                user,
+                user: userData,
                 success: true,
             });
     } catch (error) {
         res.status(500).json({
             message: "Server error",
             error: error.message,
-            success: false
+            success: false,
         });
     }
 };
@@ -254,20 +278,26 @@ export const logout = async (req, res) => {
 export const deleteAccount = async (req, res) => {
     try {
         const { password } = req.body;
-        const userId = req.id;
 
         if (!password) {
             return res.status(400).json({
-                message: "Password is required to delete the account",
+                message: "Password is required to delete the account.",
+                success: false,
+            });
+        }
+
+        const userId = req.id;
+        if (!userId) {
+            return res.status(401).json({
+                message: "Invalid User Id",
                 success: false,
             });
         }
 
         let user = await User.findById(userId);
-
         if (!user) {
             return res.status(404).json({
-                message: "User not found",
+                message: "User not found.",
                 success: false,
             });
         }
@@ -275,24 +305,28 @@ export const deleteAccount = async (req, res) => {
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if (!isPasswordMatch) {
             return res.status(400).json({
-                message: "Incorrect password",
+                message: "Incorrect password.",
                 success: false,
             });
         }
-
         await User.findByIdAndDelete(userId);
 
-        res.clearCookie("token");
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Strict"
+        });
 
         return res.status(200).json({
-            message: "Account deleted successfully",
+            message: "Account deleted successfully.",
             success: true,
         });
     } catch (error) {
+        console.error("Delete Account Error:", error);
         res.status(500).json({
-            message: "Server error",
+            message: "Server error during account deletion.",
             error: error.message,
-            success: false
+            success: false,
         });
     }
 };
@@ -301,8 +335,8 @@ export const updateProfile = async (req, res) => {
     try {
         const { name, bio } = req.body;
         const userId = req.id;
-        let user = await User.findById(userId);
 
+        let user = await User.findById(userId);
         if (!user) {
             return res.status(400).json({
                 message: "User not found",
@@ -314,7 +348,6 @@ export const updateProfile = async (req, res) => {
         if (bio) user.profile.bio = bio;
 
         await user.save();
-
         user = {
             _id: user._id,
             name: user.name,

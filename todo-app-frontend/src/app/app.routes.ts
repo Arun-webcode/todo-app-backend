@@ -25,7 +25,6 @@ export const routes: Routes = [
   },
   {
     path: 'reset-password',
-    canActivate: [loginGuard],
     loadComponent: () => import('./auth/reset-password/reset-password.page').then(m => m.ResetPasswordPage)
   }
 ];

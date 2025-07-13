@@ -24,8 +24,8 @@ export class TaskService {
     return this.http.get(ApiUrls.task.getAllTasks);
   }
 
-  async createTask(title: string, description: string, priority: string): Promise<any> {
-    return this.http.post(`${this.baseUrl}${ApiUrls.task.createTask}`, { title, description, priority }).toPromise();
+  async createTask(task: any): Promise<any> {
+    return this.http.post(`${this.baseUrl}${ApiUrls.task.createTask}`, task).toPromise();
   }
 
   updateTask(taskId: string, task: any): Observable<any> {

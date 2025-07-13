@@ -37,7 +37,6 @@ export class SignupPage implements OnInit {
   constructor(
     private authService: AuthService,
     public commonService: CommonService,
-    private modalCtrl: ModalController,
     private router: Router
   ) { }
 
@@ -74,7 +73,7 @@ export class SignupPage implements OnInit {
 
   async signup(): Promise<void> {
     await this.commonService.presentLoading();
-    if (this.password && this.password.length < 6 && !this.otp && !this.name) {
+    if (!this.name || !this.email || !this.password && this.password.length < 6 || !this.otp) {
       this.passwordError = true;
       await this.commonService.dismissLoading();
       this.commonService.presentToast('Please fill all fields corrctly', 'danger');
@@ -82,15 +81,15 @@ export class SignupPage implements OnInit {
 
     if (this.password === this.confirmPassword) {
       try {
-        const res = await this.authService.registerAccount(this.password, this.name, this.otp);
+        const res = await this.authService.registerAccount(this.email, this.password, this.name, this.otp);
         if (res.success) {
           this.commonService.presentToast(res.message);
-          await this.modalCtrl.dismiss('success');
+          this.goToLogin();
           await this.commonService.dismissLoading();
         }
         this.resetForm();
       } catch (error: any) {
-        console.error(error.error.error);
+        console.error(error.error.message);
         await this.commonService.dismissLoading();
         this.commonService.presentToast(error.error.message, 'danger');
       }
@@ -108,5 +107,4 @@ export class SignupPage implements OnInit {
     this.name = '';
     this.showPasswordInputs = false;
   }
-
 }

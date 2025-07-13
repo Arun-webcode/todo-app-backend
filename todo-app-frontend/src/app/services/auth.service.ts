@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ApiUrls } from '../config/constants';
+import { ApiUrls, Constants } from '../config/constants';
 import { environment } from 'src/environments/environment';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,15 +12,20 @@ export class AuthService {
   private baseUrl = environment.baseUrl;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private storageService: StorageService
   ) { }
+
+  async getToken() {
+    return await this.storageService.getItem(Constants.AUTH_TOKEN);
+  }
 
   async sendOtp(email: string): Promise<any> {
     return this.http.post(`${this.baseUrl}${ApiUrls.auth.otpGen}`, { email }).toPromise();
   }
 
-  async registerAccount(password: string, name: string, otp: string): Promise<any> {
-    const body = { password, name, otp };
+  async registerAccount(email: string, password: string, name: string, otp: string): Promise<any> {
+    const body = { email, password, name, otp };
     return this.http.post(`${this.baseUrl}${ApiUrls.auth.register}`, body).toPromise();
   }
 
@@ -27,14 +33,18 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}${ApiUrls.auth.resetOtp}`, { email }).toPromise();
   }
 
-  async resetPassword(newPassword: string, otp: string): Promise<any> {
-    const body = { otp, newPassword };
+  async resetPassword(email: string, newPassword: string, otp: string): Promise<any> {
+    const body = { email, otp, newPassword };
     return this.http.put(`${this.baseUrl}${ApiUrls.auth.resetPass}`, body).toPromise();
   }
 
   async login(email: string, password: string): Promise<any> {
     const body = { email, password };
-    return this.http.post(`${this.baseUrl}${ApiUrls.auth.login}`, body).toPromise();
+    // return this.http.post(`${this.baseUrl}${ApiUrls.auth.login}`, body).toPromise();
+    return this.http.post(`${this.baseUrl}${ApiUrls.auth.login}`, body, {
+      withCredentials: true
+    }).toPromise();
+
   }
 
   async logout(): Promise<any> {
@@ -43,6 +53,10 @@ export class AuthService {
 
   async deleteAccount(password: string): Promise<any> {
     const body = { password };
-    return this.http.delete(`${this.baseUrl}${ApiUrls.auth.deleteAcc}`, { body }).toPromise();
+
+    return this.http.request('delete', `${this.baseUrl}${ApiUrls.auth.deleteAcc}`, {
+      body,
+      withCredentials: true
+    }).toPromise();
   }
 }

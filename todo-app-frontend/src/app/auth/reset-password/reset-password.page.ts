@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { IonInput, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonLabel, IonHeader, IonContent, IonToolbar, IonTitle } from '@ionic/angular/standalone';
+import { Constants } from 'src/app/config/constants';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonService } from 'src/app/services/common.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -28,14 +29,20 @@ export class ResetPasswordPage implements OnInit {
   passwordIcon = 'eye-off';
   showPasswordInputs = false;
   passwordError = false;
+  isLogin = false;
 
   constructor(
     private commonService: CommonService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private storageService: StorageService
   ) { }
 
   ngOnInit() { }
+
+  async ionViewWillEnter() {
+    this.isLogin = await this.storageService.getItem(Constants.AUTH_TOKEN);
+  }
 
   forgetToLogin() {
     this.router.navigate(['login']);
@@ -44,7 +51,7 @@ export class ResetPasswordPage implements OnInit {
   async sendOtp(): Promise<void> {
     await this.commonService.presentLoading();
     try {
-      const res = await this.authService.sendResetPasswordOtp(this.email);
+      const res = this.isLogin ? await this.authService.sendResetPasswordOtp(await this.storageService.getItem(Constants.USER_EMAIL)) : await this.authService.sendResetPasswordOtp(this.email);
       this.showPasswordInputs = true;
       await this.commonService.dismissLoading();
       this.commonService.presentToast(res.message);
@@ -70,10 +77,16 @@ export class ResetPasswordPage implements OnInit {
 
     if (this.password === this.confirmPassword) {
       try {
-        const res = await this.authService.resetPassword(this.password, this.otp);
+        const res = this.isLogin ? await this.authService.resetPassword(await this.storageService.getItem(Constants.USER_EMAIL), this.password, this.otp) : await this.authService.resetPassword(this.email, this.password, this.otp);
         this.commonService.presentToast(res.message);
         if (res.success) {
-          this.router.navigate(['login']);
+          if (await this.storageService.getItem(Constants.AUTH_TOKEN)) {
+            this.router.navigate(['home'], {
+              replaceUrl: true
+            });
+          } else {
+            this.router.navigate(['login']);
+          }
           await this.commonService.dismissLoading();
         }
         this.resetForm();

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonLabel, IonChip, IonAvatar, PopoverController, ModalController } from '@ionic/angular/standalone';
+import { PopoverController, ModalController } from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
 import { StorageService } from 'src/app/services/storage.service';
 import { Constants } from 'src/app/config/constants';
@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DeleteAccountModalComponent } from 'src/app/components/delete-account-modal/delete-account-modal.component';
 import { IonicModule } from '@ionic/angular';
 import { TaskService } from 'src/app/services/task.service';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-home',
@@ -32,7 +33,7 @@ export class HomePage implements OnInit {
   name = '';
   email = '';
   tasks: any[] = [];
-  newTask = { title: '', description: '', priority: 'Medium' };
+  newTask = { title: '', description: '', priority: 'Low' };
   editingTaskId: string | null = null;
 
   constructor(
@@ -42,7 +43,8 @@ export class HomePage implements OnInit {
     private router: Router,
     private authService: AuthService,
     private modalCtrl: ModalController,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private commonService: CommonService
   ) { }
 
   ngOnInit() {
@@ -51,13 +53,14 @@ export class HomePage implements OnInit {
 
   async ionViewWillEnter() {
     await this.getUserData();
-    this.loadTasks();
+    await this.loadTasks();
   }
 
-  loadTasks() {
-    this.taskService.getAllTasks().subscribe({
-      next: (res) => {
-        this.tasks = res.tasks || [];
+  async loadTasks() {
+    await this.taskService.getAllTasks().subscribe({
+      next: async (res) => {
+        this.tasks = await res.tasks || [];
+        console.log(this.tasks, "--");
       },
       error: (err) => {
         console.error('Failed to load tasks', err);
@@ -65,28 +68,40 @@ export class HomePage implements OnInit {
     });
   }
 
-  addTask() {
-    if (this.editingTaskId) {
-      // Update existing task
-      this.taskService.updateTask(this.editingTaskId, this.newTask).subscribe({
-        next: () => {
-          this.editingTaskId = null;
-          this.newTask = { title: '', description: '', priority: 'Medium' };
-          this.loadTasks();
-        },
-        error: (err) => alert('Failed to update task: ' + err.error?.message)
-      });
-    } else {
-      // Create new task
-      this.taskService.createTask(this.newTask).subscribe({
-        next: () => {
-          this.newTask = { title: '', description: '', priority: 'Medium' };
-          this.loadTasks();
-        },
-        error: (err) => alert('Failed to add task: ' + err.error?.message)
-      });
+  async addTask() {
+    const userId = await this.storageService.getItem(Constants.USER_ID);
+    console.log(userId);
+
+    if (!this.newTask.title || !this.newTask.description) {
+      this.commonService.presentToast("Please fill in all task details!", 'danger');
+      return;
+    }
+
+    const taskPayload = {
+      title: this.newTask.title,
+      description: this.newTask.description,
+      priority: this.newTask.priority,
+      user: userId
+    };
+
+    try {
+      if (this.editingTaskId) {
+        await this.taskService.updateTask(this.editingTaskId, taskPayload).toPromise();
+        this.editingTaskId = null;
+      } else {
+        // Create new task
+        await this.taskService.createTask(taskPayload).then(async (res) => {
+          console.log(await res);
+        });
+      }
+      this.newTask = { title: '', description: '', priority: 'Medium' };
+      this.loadTasks();
+    } catch (err: any) {
+      console.error(err);
+      alert('Failed to save task: ' + (err.error?.message || err.message));
     }
   }
+
 
   editTask(task: any) {
     this.editingTaskId = task._id;
@@ -131,7 +146,7 @@ export class HomePage implements OnInit {
       if (data == 'logout') {
         await this.logout();
       } else if (data == 'reset-password') {
-
+        this.router.navigate(['reset-password']);
       } else if (data == 'delete-account') {
         await this.deleteAccount();
       }
@@ -159,6 +174,7 @@ export class HomePage implements OnInit {
       } catch (error: any) {
         console.error('Delete account failed', error);
         alert('Error: ' + error.error?.message || 'Failed to delete account.');
+        console.log(error.error?.message);
       }
     }
   }
