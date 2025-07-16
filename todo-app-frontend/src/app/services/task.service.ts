@@ -16,27 +16,23 @@ export class TaskService {
     private storageService: StorageService
   ) { }
 
-  async getToken() {
-    return await this.storageService.getItem(Constants.AUTH_TOKEN);
-  }
-
   getAllTasks(): Observable<any> {
-    return this.http.get(ApiUrls.task.getAllTasks);
+    return this.http.get(`${this.baseUrl}${ApiUrls.task.getAllTasks}`, { withCredentials: true });
   }
 
   async createTask(task: any): Promise<any> {
-    return this.http.post(`${this.baseUrl}${ApiUrls.task.createTask}`, task).toPromise();
+    return this.http.post(`${this.baseUrl}${ApiUrls.task.createTask}`, task, { withCredentials: true }).toPromise();
   }
 
   updateTask(taskId: string, task: any): Observable<any> {
-    return this.http.put(ApiUrls.task.updateTaskByTaskid.replace(':id', taskId), task);
+    return this.http.put(`${this.baseUrl}${ApiUrls.task.updateTaskByTaskid.replace(':id', taskId)}`, task, { withCredentials: true });
   }
 
   deleteTask(taskId: string): Observable<any> {
-    return this.http.delete(ApiUrls.task.deleteTaskByTaskid.replace(':id', taskId));
+    return this.http.delete(`${this.baseUrl}${ApiUrls.task.deleteTaskByTaskid.replace(':id', taskId)}`, { withCredentials: true });
   }
 
   getTaskById(taskId: string): Observable<any> {
-    return this.http.get(ApiUrls.task.getTaskByUserid.replace(':id', taskId));
+    return this.http.get(`${this.baseUrl}${ApiUrls.task.getTaskByUserid.replace(':id', taskId)}`, { withCredentials: true });
   }
 }

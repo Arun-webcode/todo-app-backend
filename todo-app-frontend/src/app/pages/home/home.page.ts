@@ -33,9 +33,9 @@ export class HomePage implements OnInit {
   name = '';
   email = '';
   tasks: any[] = [];
-  newTask = { title: '', description: '', priority: 'Low' };
+  newTask = { title: '', description: '', priority: 'low', status: 'waiting' };
   editingTaskId: string | null = null;
-
+  // status = ['waiting', 'inProgress', 'done'];
   constructor(
     public routerLink: RouterLink,
     private storageService: StorageService,
@@ -57,48 +57,50 @@ export class HomePage implements OnInit {
   }
 
   async loadTasks() {
+    this.commonService.presentLoading();
     await this.taskService.getAllTasks().subscribe({
       next: async (res) => {
         this.tasks = await res.tasks || [];
-        console.log(this.tasks, "--");
+        this.commonService.dismissLoading();
       },
       error: (err) => {
         console.error('Failed to load tasks', err);
+        this.commonService.dismissLoading();
       }
     });
   }
 
   async addTask() {
-    const userId = await this.storageService.getItem(Constants.USER_ID);
-    console.log(userId);
-
     if (!this.newTask.title || !this.newTask.description) {
       this.commonService.presentToast("Please fill in all task details!", 'danger');
       return;
     }
-
     const taskPayload = {
-      title: this.newTask.title,
-      description: this.newTask.description,
-      priority: this.newTask.priority,
-      user: userId
+      "title": this.newTask.title,
+      "description": this.newTask.description,
+      "priority": this.newTask.priority
     };
 
     try {
       if (this.editingTaskId) {
-        await this.taskService.updateTask(this.editingTaskId, taskPayload).toPromise();
+        const res = await this.taskService.updateTask(this.editingTaskId, taskPayload).toPromise();
+        if (res.success) {
+          this.commonService.presentToast(res.message, 'success');
+        }
         this.editingTaskId = null;
       } else {
         // Create new task
         await this.taskService.createTask(taskPayload).then(async (res) => {
-          console.log(await res);
+          if (res.success) {
+            this.commonService.presentToast(res.message, 'success');
+          }
         });
       }
-      this.newTask = { title: '', description: '', priority: 'Medium' };
+      this.newTask = { title: '', description: '', priority: 'low', status: 'waiting' };
       this.loadTasks();
     } catch (err: any) {
       console.error(err);
-      alert('Failed to save task: ' + (err.error?.message || err.message));
+      this.commonService.presentToast('Failed to save task: ' + (err.error?.message || err.message), 'danger');
     }
   }
 
@@ -108,24 +110,30 @@ export class HomePage implements OnInit {
     this.newTask = {
       title: task.title,
       description: task.description,
-      priority: task.priority
+      priority: task.priority,
+      status: task.status
     };
   }
 
   deleteTask(taskId: string) {
     if (confirm('Are you sure you want to delete this task?')) {
       this.taskService.deleteTask(taskId).subscribe({
-        next: () => this.loadTasks(),
-        error: (err) => alert('Failed to delete task: ' + err.error?.message)
+        next: (res) => {
+          if (res.success) {
+            this.commonService.presentToast(res.message, 'success');
+          }
+          this.loadTasks();
+        },
+        error: (err) => this.commonService.presentToast('Failed to delete task: ' + err.error?.message, 'danger')
       });
     }
   }
 
   getPriorityColor(priority: string): string {
     switch (priority) {
-      case 'High': return 'danger';
-      case 'Medium': return 'warning';
-      case 'Low': return 'success';
+      case 'high': return 'danger';
+      case 'medium': return 'warning';
+      case 'low': return 'success';
       default: return '';
     }
   }
@@ -173,13 +181,20 @@ export class HomePage implements OnInit {
         this.router.navigate(['login']);
       } catch (error: any) {
         console.error('Delete account failed', error);
-        alert('Error: ' + error.error?.message || 'Failed to delete account.');
+        this.commonService.presentToast('Error: ' + error.error?.message || 'Failed to delete account.', 'danger');
         console.log(error.error?.message);
       }
     }
   }
 
   async logout() {
+    const res = await this.authService.logout();
+    if (res.success) {
+      this.commonService.presentToast(res.message, 'success');
+    } else {
+      this.commonService.presentToast(res.message, 'danger');
+      return;
+    }
     await this.storageService.clearAll();
     this.router.navigate(['login']);
   }

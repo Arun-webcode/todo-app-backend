@@ -45,7 +45,11 @@ export class ResetPasswordPage implements OnInit {
   }
 
   forgetToLogin() {
-    this.router.navigate(['login']);
+    if (this.isLogin) {
+      this.router.navigate(['home']);
+    } else {
+      this.router.navigate(['login']);
+    }
   }
 
   async sendOtp(): Promise<void> {

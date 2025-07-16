@@ -33,27 +33,27 @@
           </ion-item>
           <ion-item lines="none">
             <ion-select [(ngModel)]="newTask.priority" name="priority" placeholder="Priority">
-              <ion-select-option value="Low">Low</ion-select-option>
-              <ion-select-option value="Medium">Medium</ion-select-option>
-              <ion-select-option value="High">High</ion-select-option>
+              <ion-select-option value="low">Low</ion-select-option>
+              <ion-select-option value="medium">Medium</ion-select-option>
+              <ion-select-option value="high">High</ion-select-option>
             </ion-select>
           </ion-item>
           <ion-button expand="block" type="submit">Add Task</ion-button>
         </form>
         <!-- [disabled]="!taskForm.form.valid" -->
         <!-- Task List -->
-        <ion-list *ngIf="tasks.length; else noTasks">
+        <ion-list class="task-list" *ngIf="tasks.length; else noTasks">
           <ion-item-sliding *ngFor="let task of tasks">
-            <ion-item [color]="getPriorityColor(task.priority)">
+            <ion-item class="all-tasks" [color]="getPriorityColor(task.priority)" lines="none">
               <ion-label>
                 <h2>{{ task.title }}</h2>
                 <p>{{ task.description }}</p>
                 <ion-badge slot="end">{{ task.priority }}</ion-badge>
               </ion-label>
-              <ion-button fill="clear" slot="end" (click)="editTask(task)">
+              <ion-button color="light" slot="end" (click)="editTask(task)">
                 <ion-icon name="create-outline"></ion-icon>
               </ion-button>
-              <ion-button fill="clear" color="danger" slot="end" (click)="deleteTask(task._id)">
+              <ion-button slot="end" (click)="deleteTask(task._id)">
                 <ion-icon name="trash-outline"></ion-icon>
               </ion-button>
             </ion-item>

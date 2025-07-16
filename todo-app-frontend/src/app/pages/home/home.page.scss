@@ -14,17 +14,6 @@ ion-content {
     font-style: italic;
 }
 
-.todo-container {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-ion-item {
-    margin-bottom: 10px;
-    border-radius: 10px;
-    --background: var(--ion-color-light-shade);
-    color: var(--ion-color-medium);
-}
 
 .todo-container {
     max-width: 600px;
@@ -44,6 +33,24 @@ ion-card {
     font-style: italic;
 }
 
-form ion-button {
-    margin-top: 20px;
+.task-list {
+    background-color: var(--ion-color-primary-contrast);
+
+    .all-tasks {
+        margin-bottom: 10px;
+        border-radius: 10px;
+    }
+}
+
+form {
+    ion-button {
+        margin-top: 20px;
+    }
+
+    ion-item {
+        margin-bottom: 10px;
+        border-radius: 10px;
+        --background: var(--ion-color-light-shade);
+        color: var(--ion-color-medium);
+    }
 }

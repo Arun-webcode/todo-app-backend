@@ -38,6 +38,8 @@ export class LoginPage implements OnInit {
 
   ngOnInit() { }
 
+  ionViewWillEnter() { }
+
   async login() {
     try {
       const res = await this.authService.login(this.email, this.password);

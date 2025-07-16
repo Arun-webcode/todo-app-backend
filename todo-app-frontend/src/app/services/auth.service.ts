@@ -40,7 +40,6 @@ export class AuthService {
 
   async login(email: string, password: string): Promise<any> {
     const body = { email, password };
-    // return this.http.post(`${this.baseUrl}${ApiUrls.auth.login}`, body).toPromise();
     return this.http.post(`${this.baseUrl}${ApiUrls.auth.login}`, body, {
       withCredentials: true
     }).toPromise();
@@ -48,7 +47,9 @@ export class AuthService {
   }
 
   async logout(): Promise<any> {
-    return this.http.get(`${this.baseUrl}${ApiUrls.auth.logout}`).toPromise();
+    return this.http.get(`${this.baseUrl}${ApiUrls.auth.logout}`, {
+      withCredentials: true
+    }).toPromise();
   }
 
   async deleteAccount(password: string): Promise<any> {

@@ -3,7 +3,7 @@ import { User } from "../models/user.model.js"
 
 export const createTask = async (req, res) => {
     try {
-        const { title, description, priority, user } = req.body;
+        const { title, description, status, priority } = req.body;
 
         const userId = req.id;
         let userExisted = await User.findById(userId);
@@ -15,11 +15,10 @@ export const createTask = async (req, res) => {
             });
         }
 
-        const newTask = new Task({ title, description, priority, user });
-        const savedTask = await newTask.save();
+        const newTask = await Task.create({ title, description, priority, status, user: userId });
         res.status(201).json({
             message: 'Task created successfully',
-            task: savedTask,
+            task: newTask,
             success: true,
         });
     } catch (error) {
@@ -43,7 +42,8 @@ export const getAllTasks = async (req, res) => {
             });
         }
 
-        const tasks = await Task.find().populate('user', 'name email');
+        // const tasks = await Task.find().populate('user', 'name email');
+        const tasks = await Task.find({ user: userId }).populate('user', 'name email');
         res.status(200).json({
             message: 'Tasks fetched successfully',
             tasks,
