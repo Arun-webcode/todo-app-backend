@@ -1,21 +1,21 @@
 :root {
-    /** primary **/
-    --ion-color-primary: #007BFF;
+    /** primary (Violet) **/
+    --ion-color-primary: #8A2BE2;
     --ion-color-primary-contrast: #ffffff;
-    --ion-color-primary-shade: #0069D9;
-    --ion-color-primary-tint: #339CFF;
+    --ion-color-primary-shade: #7A24CB;
+    --ion-color-primary-tint: #9642E5;
 
-    /** secondary **/
-    --ion-color-secondary: #00A8FF;
+    /** secondary (Dark Violet) **/
+    --ion-color-secondary: #4B0082;
     --ion-color-secondary-contrast: #ffffff;
-    --ion-color-secondary-shade: #008DD6;
-    --ion-color-secondary-tint: #33BBFF;
+    --ion-color-secondary-shade: #420073;
+    --ion-color-secondary-tint: #5C0091;
 
-    /** tertiary **/
-    --ion-color-tertiary: #0056B3;
-    --ion-color-tertiary-contrast: #ffffff;
-    --ion-color-tertiary-shade: #004494;
-    --ion-color-tertiary-tint: #3374CC;
+    /** tertiary (Light Violet) **/
+    --ion-color-tertiary: #BF80FF;
+    --ion-color-tertiary-contrast: #000000;
+    --ion-color-tertiary-shade: #A770E0;
+    --ion-color-tertiary-tint: #C699FF;
 
     /** success **/
     --ion-color-success: #4CAF50;
@@ -35,21 +35,90 @@
     --ion-color-danger-shade: #E04350;
     --ion-color-danger-tint: #FF6675;
 
-    /** dark **/
-    --ion-color-dark: #121212;
+    /** dark (Black) **/
+    --ion-color-dark: #000000;
     --ion-color-dark-contrast: #ffffff;
-    --ion-color-dark-shade: #0E0E0E;
-    --ion-color-dark-tint: #333333;
+    --ion-color-dark-shade: #000000;
+    --ion-color-dark-tint: #1a1a1a;
 
-    /** medium **/
-    --ion-color-medium: #6C757D;
+    /** medium (Gray for text/borders) **/
+    --ion-color-medium: #333333;
     --ion-color-medium-contrast: #ffffff;
-    --ion-color-medium-shade: #5A6268;
-    --ion-color-medium-tint: #7D8A92;
+    --ion-color-medium-shade: #2c2c2c;
+    --ion-color-medium-tint: #474747;
 
-    /** light **/
-    --ion-color-light: #F0F8FF;
+    /** light (Off-white for light backgrounds) **/
+    --ion-color-light: #F5F5F5;
     --ion-color-light-contrast: #000000;
-    --ion-color-light-shade: #E0EFFF;
-    --ion-color-light-tint: #F5FBFF;
+    --ion-color-light-shade: #dbdbdb;
+    --ion-color-light-tint: #ffffff;
+
+    /* App specific colors */
+    --app-background-light: #F5F5F5;
+    --app-background-dark: #121212;
+    --app-text-color-light: #000000;
+    --app-text-color-dark: #ffffff;
+    --app-card-background-light: #ffffff;
+    --app-card-background-dark: #1a1a1a;
+    --app-border-color-light: #e0e0e0;
+    --app-border-color-dark: #333333;
+    --app-header-background-light: #ffffff;
+    --app-header-background-dark: #1a1a1a;
+    --app-header-text-color-light: #000000;
+    --app-header-text-color-dark: #ffffff;
+
 }
+
+/* Dark Mode Variables */
+body.dark {
+    /** primary (Violet) **/
+    --ion-color-primary: #BF80FF;
+    --ion-color-primary-contrast: #000000;
+    --ion-color-primary-shade: #A770E0;
+    --ion-color-primary-tint: #C699FF;
+
+    /** secondary (Dark Violet) **/
+    --ion-color-secondary: #8A2BE2;
+    --ion-color-secondary-contrast: #ffffff;
+    --ion-color-secondary-shade: #7A24CB;
+    --ion-color-secondary-tint: #9642E5;
+
+    /** tertiary (Light Violet) **/
+    --ion-color-tertiary: #4B0082;
+    --ion-color-tertiary-contrast: #ffffff;
+    --ion-color-tertiary-shade: #420073;
+    --ion-color-tertiary-tint: #5C0091;
+
+    /** dark (Black) **/
+    --ion-color-dark: #000000;
+    --ion-color-dark-contrast: #ffffff;
+    --ion-color-dark-shade: #000000;
+    --ion-color-dark-tint: #1a1a1a;
+
+    /** medium (Gray for text/borders) **/
+    --ion-color-medium: #CCCCCC;
+    --ion-color-medium-contrast: #000000;
+    --ion-color-medium-shade: #B3B3B3;
+    --ion-color-medium-tint: #D9D9D9;
+
+    /** light (Off-white for light backgrounds) **/
+    --ion-color-light: #333333;
+    --ion-color-light-contrast: #ffffff;
+    --ion-color-light-shade: #2c2c2c;
+    --ion-color-light-tint: #474747;
+
+    /* App specific colors */
+    --app-background-light: #121212;
+    --app-background-dark: #000000;
+    --app-text-color-light: #ffffff;
+    --app-text-color-dark: #ffffff;
+    --app-card-background-light: #1a1a1a;
+    --app-card-background-dark: #1a1a1a;
+    --app-border-color-light: #333333;
+    --app-border-color-dark: #444444;
+    --app-header-background-light: #1a1a1a;
+    --app-header-background-dark: #000000;
+    --app-header-text-color-light: #ffffff;
+    --app-header-text-color-dark: #ffffff;
+}
+

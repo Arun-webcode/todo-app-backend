@@ -14,10 +14,22 @@ import { ModalController } from '@ionic/angular/standalone';
 export class DeleteAccountModalComponent implements OnInit {
 
   password: string = '';
+  passwordType = 'password';
+  passwordIcon = 'eye-off';
 
   constructor(private modalCtrl: ModalController) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.password = '';
+    this.passwordType = 'password';
+    this.passwordIcon = 'eye-off';
+  }
+
+  togglePasswordVisibility() {
+    this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
+    this.passwordIcon = this.passwordIcon === 'eye-off' ? 'eye' : 'eye-off';
+  }
+
   dismiss(confirm = false) {
     if (confirm) {
       this.modalCtrl.dismiss({ password: this.password });

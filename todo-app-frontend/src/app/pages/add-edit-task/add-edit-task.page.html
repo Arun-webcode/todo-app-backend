@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar class="professional-toolbar">
+    <ion-title>{{ isEditMode ? 'Edit Task' : 'Add New Task' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline" style="color: var(--app-header-text-color);"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="saveTask()" #taskForm="ngForm">
+    <!-- Task Title -->
+    <div class="form-group">
+      <ion-item lines="none" class="form-item">
+        <ion-label position="stacked" class="field-label">Task Title *</ion-label>
+        <ion-input [(ngModel)]="task.title" name="title" placeholder="Enter task title" required class="task-input">
+        </ion-input>
+      </ion-item>
+    </div>
+
+    <!-- Task Description -->
+    <div class="form-group">
+      <ion-item lines="none" class="form-item">
+        <ion-label position="stacked" class="field-label">Description</ion-label>
+        <ion-textarea [(ngModel)]="task.description" name="description" placeholder="Enter task description (optional)"
+          rows="4" class="task-input">
+        </ion-textarea>
+      </ion-item>
+    </div>
+
+    <!-- Priority Selection -->
+    <div class="form-group">
+      <ion-item lines="none" class="form-item">
+        <ion-label position="stacked" class="field-label">Priority</ion-label>
+        <ion-select [(ngModel)]="task.priority" name="priority" placeholder="Select priority" class="task-input">
+          <ion-select-option value="low">Low</ion-select-option>
+          <ion-select-option value="medium">Medium</ion-select-option>
+          <ion-select-option value="high">High</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
+
+    <!-- Priority Preview -->
+    <div class="priority-preview" *ngIf="task.priority">
+      <ion-badge [color]="getPriorityColor(task.priority)" class="priority-badge">
+        {{ task.priority | titlecase }} Priority
+      </ion-badge>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <ion-button expand="block" type="submit" [disabled]="!taskForm.form.valid" class="save-button">
+        <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+        {{ isEditMode ? 'Update Task' : 'Create Task' }}
+      </ion-button>
+
+      <ion-button expand="block" fill="outline" (click)="dismiss()" class="cancel-button">
+        <ion-icon name="close-outline" slot="start"></ion-icon>
+        Cancel
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

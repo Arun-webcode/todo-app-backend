@@ -60,4 +60,17 @@ export class AuthService {
       withCredentials: true
     }).toPromise();
   }
+
+  async updateProfile(name: string, bio: string): Promise<any> {
+    const body = { name, bio };
+    return this.http.put(`${this.baseUrl}${ApiUrls.profileUpdate}`, body, {
+      withCredentials: true
+    }).toPromise();
+  }
+
+  async getUserDetails(): Promise<any> {
+    return this.http.get(`${this.baseUrl}${ApiUrls.auth.getUserDetails}`, {
+      withCredentials: true
+    }).toPromise();
+  }
 }

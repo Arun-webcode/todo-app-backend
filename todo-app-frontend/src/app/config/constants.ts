@@ -6,6 +6,8 @@ export class Constants {
     public static readonly USER_LOGIN = 'user-login';
     public static readonly AUTH_TOKEN = 'auth-token';
     public static readonly LAST_TASK_PRIORITY = 'last-task-priority';
+    public static readonly USER_BIO = 'user_bio';
+
 
 }
 

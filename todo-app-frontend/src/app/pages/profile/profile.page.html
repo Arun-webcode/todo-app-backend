@@ -1,0 +1,112 @@
+<ion-header>
+  <ion-toolbar class="professional-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" (click)="goBack()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Profile</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="!isEditing" (click)="toggleEdit()">
+        <ion-icon name="create-outline"></ion-icon>
+      </ion-button>
+      <app-theme-toggle></app-theme-toggle>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Profile Header -->
+  <div class="profile-header">
+    <div class="avatar-container">
+      <div class="avatar">
+        {{ getInitials() }}
+      </div>
+      <div class="avatar-overlay" *ngIf="isEditing">
+        <ion-icon name="camera-outline"></ion-icon>
+      </div>
+    </div>
+
+    <div class="user-info">
+      <h1 class="user-name">{{ user.name || 'User' }}</h1>
+      <p class="user-email">{{ user.email }}</p>
+    </div>
+  </div>
+
+  <!-- Profile Form -->
+  <ion-card class="profile-card">
+    <ion-card-header>
+      <ion-card-title>
+        {{ isEditing ? 'Edit Profile' : 'Profile Information' }}
+      </ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <form (ngSubmit)="saveProfile()" #profileForm="ngForm">
+        <!-- Name Field -->
+        <div class="form-group">
+          <ion-item lines="none" class="form-item">
+            <ion-label position="stacked" class="field-label">Name</ion-label>
+            <ion-input [(ngModel)]="user.name" name="name" placeholder="Enter your name" [readonly]="!isEditing"
+              required class="profile-input">
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <!-- Email Field (Read-only) -->
+        <div class="form-group">
+          <ion-item lines="none" class="form-item">
+            <ion-label position="stacked" class="field-label">Email</ion-label>
+            <ion-input [(ngModel)]="user.email" name="email" readonly class="profile-input readonly-input">
+            </ion-input>
+          </ion-item>
+          <p class="field-note">Email cannot be changed</p>
+        </div>
+
+        <!-- Bio Field -->
+        <div class="form-group">
+          <ion-item lines="none" class="form-item">
+            <ion-label position="stacked" class="field-label">Bio</ion-label>
+            <ion-textarea [(ngModel)]="user.bio" name="bio" placeholder="Tell us about yourself..."
+              [readonly]="!isEditing" rows="4" maxlength="500" class="profile-input">
+            </ion-textarea>
+          </ion-item>
+          <p class="field-note" *ngIf="isEditing">
+            {{ user.bio.length || 0 }}/500 characters
+          </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons" *ngIf="isEditing">
+          <ion-button expand="block" type="submit" [disabled]="!profileForm.form.valid || isLoading"
+            class="save-button">
+            <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+            <span *ngIf="!isLoading">Save Changes</span>
+          </ion-button>
+
+          <ion-button expand="block" fill="outline" (click)="toggleEdit()" [disabled]="isLoading" class="cancel-button">
+            Cancel
+          </ion-button>
+        </div>
+      </form>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Account Actions -->
+  <ion-card class="actions-card">
+    <ion-card-header>
+      <ion-card-title>Account Actions</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list class="action-list">
+        <ion-item button (click)="logout()" class="action-item logout-item">
+          <ion-icon name="log-out-outline" slot="start" class="action-icon"></ion-icon>
+          <ion-label>
+            <h2>Logout</h2>
+            <p>Sign out of your account</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

@@ -2,32 +2,29 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { IonInput, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonLabel, IonHeader, IonContent, IonToolbar, IonTitle } from '@ionic/angular/standalone';
+import { IonInput, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonHeader, IonContent, IonToolbar, IonTitle, IonIcon, IonButtons } from '@ionic/angular/standalone';
 import { Constants } from 'src/app/config/constants';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonService } from 'src/app/services/common.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { ThemeToggleComponent } from 'src/app/components/theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonTitle, IonToolbar, IonContent, IonHeader, IonLabel,
+  imports: [IonButtons, IonIcon, IonTitle, IonToolbar, IonContent, IonHeader,
     IonInput, IonButton, IonCardTitle, IonCardContent,
-    IonCardSubtitle, IonCardHeader, IonCard, FormsModule, CommonModule, RouterModule
+    IonCardSubtitle, IonCardHeader, IonCard, FormsModule, CommonModule, RouterModule, ThemeToggleComponent
   ],
 })
 export class LoginPage implements OnInit {
 
-  otp = '';
   email = '';
   password = '';
-  confirmPassword = '';
   passwordType = 'password';
   passwordIcon = 'eye-off';
-  showPasswordInputs = false;
-  passwordError = false;
 
   constructor(
     private commonService: CommonService,
@@ -38,7 +35,17 @@ export class LoginPage implements OnInit {
 
   ngOnInit() { }
 
-  ionViewWillEnter() { }
+  ionViewWillEnter() {
+    this.email = '';
+    this.password = '';
+    this.passwordType = 'password';
+    this.passwordIcon = 'eye-off';
+  }
+
+  togglePasswordVisibility() {
+    this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
+    this.passwordIcon = this.passwordIcon === 'eye-off' ? 'eye' : 'eye-off';
+  }
 
   async login() {
     try {

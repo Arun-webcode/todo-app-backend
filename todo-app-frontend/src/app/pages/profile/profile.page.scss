@@ -1,0 +1,498 @@
+// Profile Page Styles
+ion-content {
+  --background: var(--ion-color-light-shade);
+}
+
+// Profile Header
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(191, 128, 255, 0.2);
+
+  .avatar-container {
+    position: relative;
+    margin-bottom: 16px;
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #8A2BE2, #4B0082);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 4px 16px rgba(138, 43, 226, 0.3);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+      }
+    }
+
+    .avatar-overlay {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 28px;
+      height: 28px;
+      background: var(--ion-color-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  .user-info {
+    text-align: center;
+
+    .user-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+      color: var(--ion-color-primary);
+    }
+
+    .user-email {
+      font-size: 0.9rem;
+      color: var(--ion-color-medium);
+      margin: 0;
+      opacity: 0.8;
+    }
+  }
+}
+
+// Profile Card
+.profile-card {
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  border: 1px solid rgba(191, 128, 255, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+
+  ion-card-header {
+    padding: 20px 20px 0;
+
+    ion-card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--ion-color-primary);
+    }
+  }
+
+  ion-card-content {
+    padding: 20px;
+  }
+}
+
+// Form Styling
+.form-group {
+  margin-bottom: 20px;
+
+  .form-item {
+    --background: rgba(191, 128, 255, 0.05);
+    --border-color: rgba(191, 128, 255, 0.2);
+    --border-radius: 12px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --min-height: 56px;
+    border: 1px solid rgba(191, 128, 255, 0.2);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+
+    &:focus-within {
+      --background: rgba(191, 128, 255, 0.1);
+      --border-color: rgba(191, 128, 255, 0.4);
+      border-color: rgba(191, 128, 255, 0.4);
+      box-shadow: 0 4px 12px rgba(191, 128, 255, 0.2);
+    }
+
+    .field-label {
+      color: var(--ion-color-primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .profile-input {
+      --color: var(--ion-color-dark);
+      --placeholder-color: var(--ion-color-medium);
+      font-weight: 500;
+
+      &.readonly-input {
+        --color: var(--ion-color-medium);
+        opacity: 0.7;
+      }
+    }
+  }
+
+  .field-note {
+    font-size: 0.8rem;
+    color: var(--ion-color-medium);
+    margin: 4px 0 0 0;
+    opacity: 0.8;
+  }
+}
+
+// Action Buttons
+.action-buttons {
+  margin-top: 24px;
+
+  .save-button {
+    --background: linear-gradient(135deg, #8A2BE2, #4B0082);
+    --border-radius: 12px;
+    --box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+    --color: white;
+    font-weight: 600;
+    height: 48px;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+
+    &:hover:not([disabled]) {
+      --box-shadow: 0 6px 16px rgba(138, 43, 226, 0.4);
+      transform: translateY(-1px);
+    }
+
+    &[disabled] {
+      --background: rgba(191, 128, 255, 0.3);
+      --box-shadow: none;
+      opacity: 0.6;
+    }
+  }
+
+  .cancel-button {
+    --color: var(--ion-color-primary);
+    --border-color: var(--ion-color-primary);
+    --border-radius: 12px;
+    font-weight: 600;
+    height: 48px;
+    transition: all 0.3s ease;
+
+    &:hover:not([disabled]) {
+      --background: rgba(191, 128, 255, 0.1);
+      transform: translateY(-1px);
+    }
+  }
+}
+
+// Actions Card
+.actions-card {
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(191, 128, 255, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+
+  ion-card-header {
+    padding: 20px 20px 0;
+
+    ion-card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--ion-color-primary);
+    }
+  }
+
+  ion-card-content {
+    padding: 20px;
+  }
+}
+
+// Action List
+.action-list {
+  background: transparent;
+
+  .action-item {
+    --background: rgba(191, 128, 255, 0.05);
+    --border-color: rgba(191, 128, 255, 0.2);
+    --border-radius: 12px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --min-height: 60px;
+    border: 1px solid rgba(191, 128, 255, 0.2);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      --background: rgba(191, 128, 255, 0.1);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(191, 128, 255, 0.2);
+    }
+
+    &.logout-item {
+      --border-color: rgba(255, 75, 92, 0.3);
+      border-color: rgba(255, 75, 92, 0.3);
+
+      &:hover {
+        --background: rgba(255, 75, 92, 0.1);
+        --border-color: rgba(255, 75, 92, 0.4);
+        border-color: rgba(255, 75, 92, 0.4);
+        box-shadow: 0 4px 12px rgba(255, 75, 92, 0.2);
+      }
+
+      .action-icon {
+        color: var(--ion-color-danger);
+      }
+
+      ion-label h2 {
+        color: var(--ion-color-danger);
+      }
+    }
+
+    .action-icon {
+      color: var(--ion-color-primary);
+      font-size: 1.3rem;
+      margin-right: 12px;
+    }
+
+    ion-label {
+      h2 {
+        font-weight: 600;
+        color: var(--ion-color-dark);
+        margin-bottom: 2px;
+      }
+
+      p {
+        color: var(--ion-color-medium);
+        font-size: 0.85rem;
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+// Dark Mode Adjustments
+:host-context(.dark) {
+  ion-content {
+    --background: linear-gradient(135deg, rgba(191, 128, 255, 0.05), rgba(75, 0, 130, 0.05));
+  }
+
+  .professional-toolbar {
+    --background: linear-gradient(135deg, #4B0082 0%, #000000 100%);
+    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  .profile-header {
+    background: linear-gradient(135deg, rgba(191, 128, 255, 0.1), rgba(75, 0, 130, 0.1));
+    border: 1px solid rgba(191, 128, 255, 0.15);
+
+    .avatar-container {
+      .avatar {
+        background: linear-gradient(135deg, #4B0082, #000000);
+        box-shadow: 0 4px 16px rgba(75, 0, 130, 0.4);
+
+        &:hover {
+          box-shadow: 0 6px 20px rgba(75, 0, 130, 0.5);
+        }
+      }
+    }
+
+    .user-info {
+      .user-name {
+        color: #BF80FF;
+      }
+    }
+  }
+
+  .profile-card,
+  .actions-card {
+    background: var(--app-card-background-dark);
+    border: 1px solid rgba(191, 128, 255, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+
+    ion-card-header {
+      ion-card-title {
+        color: #BF80FF;
+      }
+    }
+  }
+
+  .form-group {
+    .form-item {
+      --background: rgba(191, 128, 255, 0.05);
+      --border-color: rgba(191, 128, 255, 0.15);
+      border-color: rgba(191, 128, 255, 0.15);
+
+      &:focus-within {
+        --background: rgba(191, 128, 255, 0.1);
+        --border-color: rgba(191, 128, 255, 0.3);
+        border-color: rgba(191, 128, 255, 0.3);
+        box-shadow: 0 4px 12px rgba(191, 128, 255, 0.2);
+      }
+
+      .field-label {
+        color: #BF80FF;
+      }
+
+      .profile-input {
+        --color: var(--ion-color-medium);
+
+        &.readonly-input {
+          --color: var(--ion-color-medium);
+        }
+      }
+    }
+  }
+
+  .action-buttons {
+    .save-button {
+      --background: linear-gradient(135deg, #4B0082, #000000);
+      --box-shadow: 0 4px 12px rgba(75, 0, 130, 0.4);
+
+      &:hover:not([disabled]) {
+        --box-shadow: 0 6px 16px rgba(75, 0, 130, 0.5);
+      }
+    }
+
+    .cancel-button {
+      --color: #BF80FF;
+      --border-color: #BF80FF;
+
+      &:hover:not([disabled]) {
+        --background: rgba(191, 128, 255, 0.1);
+      }
+    }
+  }
+
+  .action-list {
+    .action-item {
+      --background: rgba(191, 128, 255, 0.05);
+      --border-color: rgba(191, 128, 255, 0.15);
+      border-color: rgba(191, 128, 255, 0.15);
+
+      &:hover {
+        --background: rgba(191, 128, 255, 0.1);
+        box-shadow: 0 4px 12px rgba(191, 128, 255, 0.2);
+      }
+
+      &.logout-item {
+        --border-color: rgba(255, 75, 92, 0.2);
+        border-color: rgba(255, 75, 92, 0.2);
+
+        &:hover {
+          --background: rgba(255, 75, 92, 0.1);
+          --border-color: rgba(255, 75, 92, 0.3);
+          border-color: rgba(255, 75, 92, 0.3);
+        }
+      }
+
+      .action-icon {
+        color: #BF80FF;
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .profile-header {
+    padding: 24px 16px;
+    margin-bottom: 20px;
+    border-radius: 16px;
+
+    .avatar-container {
+      .avatar {
+        width: 70px;
+        height: 70px;
+        font-size: 1.8rem;
+      }
+
+      .avatar-overlay {
+        width: 24px;
+        height: 24px;
+        font-size: 0.8rem;
+      }
+    }
+
+    .user-info {
+      .user-name {
+        font-size: 1.3rem;
+      }
+
+      .user-email {
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  .profile-card,
+  .actions-card {
+    border-radius: 16px;
+    margin-bottom: 16px;
+
+    ion-card-header {
+      padding: 16px 16px 0;
+
+      ion-card-title {
+        font-size: 1.2rem;
+      }
+    }
+
+    ion-card-content {
+      padding: 16px;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+
+    .form-item {
+      --min-height: 48px;
+      border-radius: 10px;
+
+      .field-label {
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  .action-buttons {
+    margin-top: 20px;
+
+    .save-button,
+    .cancel-button {
+      height: 44px;
+      border-radius: 10px;
+    }
+  }
+
+  .action-list {
+    .action-item {
+      --min-height: 52px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+
+      .action-icon {
+        font-size: 1.2rem;
+      }
+
+      ion-label {
+        h2 {
+          font-size: 0.95rem;
+        }
+
+        p {
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+}

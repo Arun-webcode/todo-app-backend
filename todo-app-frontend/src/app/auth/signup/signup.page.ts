@@ -8,18 +8,22 @@ import {
   IonContent,
   IonTitle, IonHeader,
   IonToolbar,
+  IonIcon,
+  IonItem,
+  IonButtons,
   ModalController
 } from '@ionic/angular/standalone';
 import { CommonService } from 'src/app/services/common.service';
 import { Router } from '@angular/router';
+import { ThemeToggleComponent } from 'src/app/components/theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.page.html',
   styleUrls: ['./signup.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonLabel,
-    IonInput, IonButton, IonCardTitle, IonCardContent, IonCardSubtitle, IonCardHeader, IonCard, IonContent, IonTitle, IonToolbar, FormsModule, CommonModule
+  imports: [IonButtons, IonItem, IonIcon, IonHeader, IonLabel,
+    IonInput, IonButton, IonCardTitle, IonCardContent, IonCardSubtitle, IonCardHeader, IonCard, IonContent, IonTitle, IonToolbar, FormsModule, CommonModule, ThemeToggleComponent
   ]
 })
 export class SignupPage implements OnInit {
@@ -45,6 +49,11 @@ export class SignupPage implements OnInit {
 
   goToLogin() {
     this.router.navigate(['login']);
+  }
+
+  togglePasswordVisibility() {
+    this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
+    this.passwordIcon = this.passwordIcon === 'eye-off' ? 'eye' : 'eye-off';
   }
 
   async sendOtp(): Promise<void> {

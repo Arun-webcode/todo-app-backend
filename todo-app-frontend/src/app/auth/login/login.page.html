@@ -1,28 +1,78 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-title>Login</ion-title>
+  <ion-toolbar class="professional-toolbar">
+    <ion-title>Welcome Back</ion-title>
+    <ion-buttons slot="end">
+      <app-theme-toggle></app-theme-toggle>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-subtitle>Welcome to Todo</ion-card-subtitle>
-      <ion-card-title>Login</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <form (ngSubmit)="login()" #signupForm="ngForm">
-        <ion-input id="emailInput" errorText="Invalid email" email type="email" [(ngModel)]="email" name="email"
-          label="Email" label-placement="floating" fill="outline" placeholder="Enter your email" required></ion-input>
+<ion-content [fullscreen]="true" class="auth-content">
+  <div class="auth-container">
+    <!-- Logo/Brand Section -->
+    <div class="brand-section">
+      <div class="logo-container">
+        <ion-icon name="checkbox-outline" class="brand-logo"></ion-icon>
+      </div>
+      <h1 class="brand-title">Todo App</h1>
+      <p class="brand-subtitle">Stay organized, stay productive</p>
+    </div>
 
-        <ion-input id="passwordInput" [type]="passwordType" [(ngModel)]="password" name="password" label="Password"
-          label-placement="floating" fill="outline" placeholder="Enter Password" required></ion-input>
+    <!-- Login Form -->
+    <ion-card class="auth-card">
+      <ion-card-header class="auth-header">
+        <ion-card-title class="auth-title">Sign In</ion-card-title>
+        <ion-card-subtitle class="auth-subtitle">Welcome back! Please sign in to continue</ion-card-subtitle>
+      </ion-card-header>
 
-        <ion-button expand="block" type="submit">Login</ion-button>
-      </form>
-      <ion-button fill="clear" (click)="forgetPassword()"> Forget Password </ion-button> <br>
-      <ion-label>Don't have an account? <ion-label color="primary" class="login" (click)="goToSignup()"> Sign Up
-        </ion-label>👈</ion-label>
-    </ion-card-content>
-  </ion-card>
+      <ion-card-content class="auth-content-inner">
+        <form (ngSubmit)="login()" #loginForm="ngForm" class="auth-form">
+          <!-- Email Input -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+              <ion-input id="emailInput" type="email" [(ngModel)]="email" name="email" label="Email Address"
+                label-placement="floating" fill="outline" placeholder="Enter your email" required class="custom-input">
+              </ion-input>
+            </div>
+          </div>
+
+          <!-- Password Input -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+              <ion-input id="passwordInput" [type]="passwordType" [(ngModel)]="password" name="password"
+                label="Password" label-placement="floating" fill="outline" placeholder="Enter your password" required
+                class="custom-input">
+              </ion-input>
+              <ion-button fill="clear" class="password-toggle" (click)="togglePasswordVisibility()">
+                <ion-icon [name]="passwordType === 'password' ? 'eye-outline' : 'eye-off-outline'"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
+
+          <ion-button expand="block" type="submit" class="auth-submit-btn" [disabled]="!loginForm.valid">
+            <ion-icon name="log-in-outline" slot="start"></ion-icon>
+            Sign In
+          </ion-button>
+        </form>
+
+        <div class="auth-links">
+          <ion-button fill="clear" (click)="forgetPassword()" class="forgot-password-btn">
+            <ion-icon name="help-circle-outline" slot="start"></ion-icon>
+            Forgot Password?
+          </ion-button>
+        </div>
+
+        <div class="auth-divider">
+          <span>Don't have an account?</span>
+        </div>
+
+        <ion-button fill="outline" expand="block" (click)="goToSignup()" class="auth-secondary-btn">
+          <ion-icon name="person-add-outline" slot="start"></ion-icon>
+          Create Account
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

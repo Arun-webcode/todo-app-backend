@@ -1,42 +1,165 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title>Signup</ion-title>
+    <ion-title>Create Account</ion-title>
+    <ion-buttons slot="end">
+      <app-theme-toggle></app-theme-toggle>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-subtitle>Welcome to Todo</ion-card-subtitle>
-      <ion-card-title>Create Account</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <form (ngSubmit)="signup()" #signupForm="ngForm">
-        <ion-input type="email" [(ngModel)]="email" name="email" label="Email" label-placement="floating" fill="outline"
-          placeholder="Enter your email" required></ion-input>
-        <ion-button *ngIf="!showPasswordInputs" fill="outline" expand="block" type="button" (click)="sendOtp()">Send
-          OTP</ion-button>
+<ion-content [fullscreen]="true" class="auth-content">
+  <div class="auth-container">
+    <!-- Logo/Brand Section -->
+    <div class="brand-section">
+      <div class="logo-container">
+        <ion-icon name="person-add-outline" class="brand-logo"></ion-icon>
+      </div>
+      <h1 class="brand-title">Join Todo App</h1>
+      <p class="brand-subtitle">Start your productivity journey today</p>
+    </div>
 
-        <ion-input *ngIf="showPasswordInputs" type="number" [(ngModel)]="otp" name="otp" label="OTP"
-          label-placement="floating" fill="outline" placeholder="Enter OTP" required></ion-input>
+    <!-- Signup Form -->
+    <ion-card class="auth-card">
+      <ion-card-header class="auth-header">
+        <ion-card-title class="auth-title">Sign Up</ion-card-title>
+        <ion-card-subtitle class="auth-subtitle">Create your account to get started</ion-card-subtitle>
+      </ion-card-header>
+      
+      <ion-card-content class="auth-content-inner">
+        <form (ngSubmit)="signup()" #signupForm="ngForm" class="auth-form">
+          <!-- Email Input -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+              <ion-input 
+                type="email" 
+                [(ngModel)]="email" 
+                name="email" 
+                label="Email Address" 
+                label-placement="floating" 
+                fill="outline" 
+                placeholder="Enter your email" 
+                required
+                class="custom-input">
+              </ion-input>
+            </div>
+          </div>
 
-        <ion-input *ngIf="showPasswordInputs" [type]="passwordType" [(ngModel)]="password" name="password"
-          label="New Password" label-placement="floating" fill="outline" placeholder="Enter New Password"
-          required></ion-input>
+          <!-- Send OTP Button -->
+          <ion-button 
+            *ngIf="!showPasswordInputs" 
+            fill="outline" 
+            expand="block" 
+            type="button" 
+            (click)="sendOtp()"
+            class="otp-btn">
+            <ion-icon name="mail-outline" slot="start"></ion-icon>
+            Send Verification Code
+          </ion-button>
 
-        <ion-input *ngIf="showPasswordInputs" type="password" [(ngModel)]="confirmPassword" name="confirmpassword"
-          label="Confirm New Password" label-placement="floating" fill="outline" placeholder="Confirm New Password"
-          required></ion-input>
+          <!-- OTP Input -->
+          <div class="form-group" *ngIf="showPasswordInputs">
+            <div class="input-wrapper">
+              <ion-icon name="key-outline" class="input-icon"></ion-icon>
+              <ion-input 
+                type="number" 
+                [(ngModel)]="otp" 
+                name="otp" 
+                label="Verification Code" 
+                label-placement="floating" 
+                fill="outline" 
+                placeholder="Enter 6-digit code" 
+                required
+                class="custom-input">
+              </ion-input>
+            </div>
+          </div>
 
-        <ion-input *ngIf="showPasswordInputs" type="text" [(ngModel)]="name" name="name" label="Name"
-          label-placement="floating" fill="outline" placeholder="Enter Your Name" required></ion-input>
+          <!-- Name Input -->
+          <div class="form-group" *ngIf="showPasswordInputs">
+            <div class="input-wrapper">
+              <ion-icon name="person-outline" class="input-icon"></ion-icon>
+              <ion-input 
+                type="text" 
+                [(ngModel)]="name" 
+                name="name" 
+                label="Full Name" 
+                label-placement="floating" 
+                fill="outline" 
+                placeholder="Enter your full name" 
+                required
+                class="custom-input">
+              </ion-input>
+            </div>
+          </div>
 
-        <ion-button *ngIf="showPasswordInputs" expand="block" type="submit">Signup</ion-button>
-      </form>
+          <!-- Password Input -->
+          <div class="form-group" *ngIf="showPasswordInputs">
+            <div class="input-wrapper">
+              <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+              <ion-input 
+                [type]="passwordType" 
+                [(ngModel)]="password" 
+                name="password" 
+                label="Password" 
+                label-placement="floating" 
+                fill="outline" 
+                placeholder="Create a strong password" 
+                required
+                class="custom-input">
+              </ion-input>
+              <ion-button 
+                fill="clear" 
+                class="password-toggle"
+                (click)="togglePasswordVisibility()">
+                <ion-icon [name]="passwordType === 'password' ? 'eye-outline' : 'eye-off-outline'"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
 
-      <ion-label>Already have an account? <ion-label class="login" color="primary" (click)="goToLogin()">
-          Login
-        </ion-label>👈</ion-label>
-    </ion-card-content>
-  </ion-card>
+          <!-- Confirm Password Input -->
+          <div class="form-group" *ngIf="showPasswordInputs">
+            <div class="input-wrapper">
+              <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+              <ion-input 
+                type="password" 
+                [(ngModel)]="confirmPassword" 
+                name="confirmpassword" 
+                label="Confirm Password" 
+                label-placement="floating" 
+                fill="outline" 
+                placeholder="Confirm your password" 
+                required
+                class="custom-input">
+              </ion-input>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <ion-button 
+            *ngIf="showPasswordInputs" 
+            expand="block" 
+            type="submit" 
+            class="auth-submit-btn"
+            [disabled]="!signupForm.valid || passwordError">
+            <ion-icon name="person-add-outline" slot="start"></ion-icon>
+            Create Account
+          </ion-button>
+        </form>
+
+        <div class="auth-divider">
+          <span>Already have an account?</span>
+        </div>
+
+        <ion-button 
+          fill="clear" 
+          expand="block" 
+          (click)="goToLogin()" 
+          class="auth-link-btn">
+          <ion-icon name="log-in-outline" slot="start"></ion-icon>
+          Sign In Instead
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

@@ -8,9 +8,16 @@
 </ion-header>
 
 <ion-content class="ion-padding modal-content">
-  <div class="form-container">
-    <ion-input id="passwordInput" type="password" [(ngModel)]="password" name="password" label="Password"
-      label-placement="floating" fill="outline" placeholder="Enter Password" required></ion-input>
+  <div class="form-group">
+    <div class="input-wrapper">
+      <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+      <ion-input id="passwordInput" [type]="passwordType" [(ngModel)]="password" name="password" label="Password"
+        label-placement="floating" fill="outline" placeholder="Enter your password" required class="custom-input">
+      </ion-input>
+      <ion-button fill="clear" class="password-toggle" (click)="togglePasswordVisibility()">
+        <ion-icon [name]="passwordType === 'password' ? 'eye-outline' : 'eye-off-outline'"></ion-icon>
+      </ion-button>
+    </div>
 
     <ion-button expand="block" color="primary" shape="round" class="confirm-btn" (click)="dismiss(true)"
       [disabled]="!password">

@@ -1,22 +1,421 @@
-ion-content {
-    --background: var(--ion-color-light-shade);
+// Auth Content Styling
+.auth-content {
+  --background: linear-gradient(135deg, #4B0082 0%, #8A2BE2 100%);
+
+  .auth-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
 }
 
-ion-card {
-    background: var(--ion-color-secondary-contrast);
+// Professional toolbar styling
+.professional-toolbar {
+  --background: linear-gradient(135deg, #4B0082 0%, #8A2BE2 100%);
+  --color: #ffffff;
+  --border-color: transparent;
 
-    ion-card-content {
-        ion-input {
-            min-height: 45px;
-            margin-bottom: 10px;
-        }
+  ion-title {
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+}
 
-        ion-button {
-            --border-color: var(--ion-color-secondary);
-        }
+// Brand Section
+.brand-section {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: fadeInUp 0.8s ease-out;
 
-        .login {
-            cursor: pointer;
-        }
+  .logo-container {
+    margin-bottom: 20px;
+
+    .brand-logo {
+      font-size: 4rem;
+      color: rgba(255, 255, 255, 0.9);
+      animation: logoFloat 3s ease-in-out infinite;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
+  }
+
+  .brand-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    background: linear-gradient(135deg, #fff, #BF80FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .brand-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    font-weight: 400;
+  }
+}
+
+// Auth Card
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(191, 128, 255, 0.3);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(75, 0, 130, 0.4);
+  animation: slideInUp 0.6s ease-out 0.2s both;
+
+  .auth-header {
+    text-align: center;
+    padding: 32px 24px 16px;
+
+    .auth-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.95);
+      margin: 0 0 8px 0;
+    }
+
+    .auth-subtitle {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin: 0;
+      font-weight: 400;
+    }
+  }
+
+  .auth-content-inner {
+    padding: 16px 24px 32px;
+  }
+}
+
+// Form Styling
+.auth-form {
+  .form-group {
+    margin-bottom: 20px;
+    animation: slideInRight 0.4s ease-out;
+    animation-fill-mode: both;
+
+    &:nth-child(1) {
+      animation-delay: 0.3s;
+    }
+
+    &:nth-child(2) {
+      animation-delay: 0.4s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0.5s;
+    }
+  }
+}
+
+// Input wrapper for proper icon positioning
+.input-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(191, 128, 255, 0.8);
+    font-size: 1.2rem;
+    z-index: 10;
+    transition: color 0.3s ease;
+  }
+
+  .custom-input {
+    --padding-start: 48px;
+    --padding-end: 16px;
+    --border-radius: 16px;
+    --background: rgba(0, 0, 0, 0.3);
+    --color: rgba(255, 255, 255, 0.95);
+    --border-color: rgba(191, 128, 255, 0.4);
+    --placeholder-color: rgba(255, 255, 255, 0.6);
+    --min-height: 56px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    // border: 2px solid rgba(191, 128, 255, 0.4);
+
+    &:focus-within {
+      --background: rgba(0, 0, 0, 0.4);
+      --border-color: rgba(191, 128, 255, 0.8);
+      --color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(191, 128, 255, 0.3);
+      border-color: rgba(191, 128, 255, 0.8);
+      border-radius: 16px
+    }
+  }
+
+  &:focus-within .input-icon {
+    color: rgba(191, 128, 255, 1);
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 8px;
+    top: 43%;
+    transform: translateY(-50%);
+    --color: rgba(191, 128, 255, 0.8);
+    --padding-start: 8px;
+    --padding-end: 8px;
+    z-index: 10;
+
+    &:hover {
+      --color: rgba(191, 128, 255, 1);
+    }
+  }
+}
+
+// Button Styling
+.auth-submit-btn {
+  --background: linear-gradient(135deg, #8A2BE2, #4B0082);
+  --border-radius: 16px;
+  --box-shadow: 0 8px 25px rgba(138, 43, 226, 0.4);
+  --color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  height: 56px;
+  margin: 24px 0 16px 0;
+  transition: all 0.3s ease;
+
+  &:hover:not([disabled]) {
+    --box-shadow: 0 12px 35px rgba(138, 43, 226, 0.6);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &[disabled] {
+    --background: rgba(255, 255, 255, 0.2);
+    --box-shadow: none;
+    opacity: 0.6;
+  }
+}
+
+.auth-secondary-btn,
+.forgot-password-btn {
+  color: var(--ion-color-primary-tint) !important;
+}
+
+// Divider
+.auth-divider {
+  text-align: center;
+  margin: 20px 0;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(191, 128, 255, 0.3);
+  }
+
+  span {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0 16px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+// Link Button
+.auth-link-btn {
+  --color: rgba(191, 128, 255, 0.9);
+  font-weight: 500;
+
+  &:hover {
+    --color: rgba(191, 128, 255, 1);
+  }
+}
+
+// Animations
+@keyframes logoFloat {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  33% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+
+  66% {
+    transform: translateY(-5px) rotate(-3deg);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Dark Mode Adjustments
+:host-context(.dark) {
+  .auth-content {
+    --background: linear-gradient(135deg, #000000 0%, #4B0082 100%);
+  }
+
+  .professional-toolbar {
+    --background: linear-gradient(135deg, #4B0082 0%, #000000 100%);
+  }
+
+  .auth-card {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(191, 128, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+  }
+
+  .input-wrapper {
+    .custom-input {
+      --background: rgba(0, 0, 0, 0.5);
+      --color: rgba(255, 255, 255, 0.95);
+      --border-color: rgba(191, 128, 255, 0.3);
+      --placeholder-color: rgba(255, 255, 255, 0.5);
+      border-color: rgba(191, 128, 255, 0.3);
+
+      &:focus-within {
+        --background: rgba(0, 0, 0, 0.7);
+        --border-color: rgba(191, 128, 255, 0.6);
+        border-color: rgba(191, 128, 255, 0.6);
+      }
+    }
+
+    .input-icon {
+      color: rgba(191, 128, 255, 0.6);
+    }
+
+    &:focus-within .input-icon {
+      color: rgba(191, 128, 255, 0.9);
+    }
+
+    .password-toggle {
+      --color: rgba(191, 128, 255, 0.6);
+
+      &:hover {
+        --color: rgba(191, 128, 255, 0.9);
+      }
+    }
+  }
+
+  .auth-submit-btn {
+    --background: linear-gradient(135deg, #4B0082, #000000);
+    --box-shadow: 0 8px 25px rgba(75, 0, 130, 0.4);
+
+    &:hover:not([disabled]) {
+      --box-shadow: 0 12px 35px rgba(75, 0, 130, 0.6);
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .auth-content .auth-container {
+    padding: 16px;
+  }
+
+  .brand-section {
+    margin-bottom: 30px;
+
+    .brand-logo {
+      font-size: 3rem;
+    }
+
+    .brand-title {
+      font-size: 2rem;
+    }
+
+    .brand-subtitle {
+      font-size: 1rem;
+    }
+  }
+
+  .auth-card {
+    max-width: 100%;
+    border-radius: 20px;
+
+    .auth-header {
+      padding: 24px 20px 12px;
+
+      .auth-title {
+        font-size: 1.6rem;
+      }
+    }
+
+    .auth-content-inner {
+      padding: 12px 20px 24px;
+    }
+  }
+
+  .input-wrapper {
+    .input-icon {
+      left: 12px;
+      font-size: 1.1rem;
+    }
+
+    .custom-input {
+      --padding-start: 40px;
+      --padding-end: 12px;
+      --border-radius: 12px;
+      --min-height: 48px;
+    }
+
+    .password-toggle {
+      right: 4px;
+    }
+  }
+
+  .auth-submit-btn {
+    height: 48px;
+    --border-radius: 12px;
+  }
 }

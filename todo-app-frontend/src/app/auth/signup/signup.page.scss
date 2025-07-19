@@ -1,25 +1,55 @@
-ion-content {
-    --background: var(--ion-color-light-shade);
+// Import shared auth styles
+@import '../login/login.page.scss';
+
+// Additional signup-specific styles
+.signup-specific {
+  .otp-section {
+    .otp-input {
+      --background: rgba(0, 0, 0, 0.3);
+      --color: rgba(255, 255, 255, 0.95);
+      --border-color: rgba(191, 128, 255, 0.4);
+      --placeholder-color: rgba(255, 255, 255, 0.6);
+      // border: 2px solid rgba(191, 128, 255, 0.4);
+
+      &:focus-within {
+        --background: rgba(0, 0, 0, 0.4);
+        --border-color: rgba(191, 128, 255, 0.8);
+        border-color: rgba(191, 128, 255, 0.8);
+        box-shadow: 0 8px 25px rgba(191, 128, 255, 0.3);
+      }
+    }
+  }
+
+  .terms-checkbox {
+    --color: rgba(191, 128, 255, 0.8);
+    --color-checked: #8A2BE2;
+    --border-color: rgba(191, 128, 255, 0.4);
+    --border-color-checked: #8A2BE2;
+  }
 }
 
-ion-card {
-    background: var(--ion-color-secondary-contrast);
+// Dark mode adjustments for signup
+:host-context(.dark) {
+  .signup-specific {
+    .otp-section {
+      .otp-input {
+        --background: rgba(0, 0, 0, 0.5);
+        --border-color: rgba(191, 128, 255, 0.3);
+        border-color: rgba(191, 128, 255, 0.3);
 
-    ion-card-content {
-        form {
-            margin-bottom: 15px;
+        &:focus-within {
+          --background: rgba(0, 0, 0, 0.7);
+          --border-color: rgba(191, 128, 255, 0.6);
+          border-color: rgba(191, 128, 255, 0.6);
         }
-
-        ion-input {
-            margin-bottom: 10px;
-        }
-
-        ion-button {
-            --border-color: var(--ion-color-secondary);
-        }
-
-        .login {
-            cursor: pointer;
-        }
+      }
     }
+
+    .terms-checkbox {
+      --color: rgba(191, 128, 255, 0.6);
+      --color-checked: #BF80FF;
+      --border-color: rgba(191, 128, 255, 0.3);
+      --border-color-checked: #BF80FF;
+    }
+  }
 }

@@ -1,0 +1,91 @@
+.theme-toggle-btn {
+  --background: transparent;
+  --border-radius: 50% !important;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  width: 40px;
+  height: 40px;
+  margin: 0 8px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    --background: none;
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  .theme-icon {
+    font-size: 1.4rem;
+    transition: all 0.3s ease;
+  }
+}
+
+// Dark mode adjustments
+:host-context(.dark) {
+  .theme-toggle-btn {
+    --color: #d0a4fd;
+
+    .theme-icon {
+      color: #d0a4fd;
+    }
+
+    &:hover {
+      --background: rgba(191, 128, 255, 0.15);
+    }
+  }
+}
+
+// Light mode adjustments
+:host-context(:not(.dark)) {
+  .theme-toggle-btn {
+    --color: #4B0082;
+
+    .theme-icon {
+      color: #4B0082;
+    }
+
+    &:hover {
+      --background: none;
+    }
+  }
+}
+
+// Animation for theme switching
+.theme-icon {
+  animation: themeIconRotate 0.3s ease-in-out;
+}
+
+@keyframes themeIconRotate {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(180deg) scale(1.2);
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .theme-toggle-btn {
+    width: 36px;
+    height: 36px;
+    --padding-start: 6px;
+    --padding-end: 6px;
+    --padding-top: 6px;
+    --padding-bottom: 6px;
+
+    .theme-icon {
+      font-size: 2.2rem;
+    }
+  }
+}

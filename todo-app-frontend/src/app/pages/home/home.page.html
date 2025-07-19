@@ -1,69 +1,203 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Motivated Todo</ion-title>
-    <ion-chip slot="end" (click)="openUserMenu($event)">
-      <ion-avatar>
-        <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
-      </ion-avatar>
-      <ion-label>{{name}}</ion-label>
-    </ion-chip>
+  <ion-toolbar class="professional-toolbar">
+    <ion-title>Todo App</ion-title>
+    <ion-buttons slot="end">
+      <app-theme-toggle></app-theme-toggle>
+      <ion-button (click)="openUserMenu($event)">
+        <ion-icon name="person-circle-outline" style="color: var(--app-header-text-color);"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
+  <!-- Loading Spinner -->
+  <div *ngIf="loading$ | async" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading tasks...</p>
+  </div>
+
   <!-- Motivational Quote Section -->
   <div class="quote-container">
-    <h2>"{{ currentQuote }}"</h2>
+    <h2 class="quote-text">"{{ currentQuote }}"</h2>
   </div>
 
-  <!-- ToDo List Section -->
-  <div class="todo-container">
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title color="Medium">My Tasks</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <!-- Add Task Form -->
-        <form (ngSubmit)="addTask()" #taskForm="ngForm">
-          <ion-item lines="none">
-            <ion-input [(ngModel)]="newTask.title" name="title" placeholder="Task Title" required></ion-input>
-          </ion-item>
-          <ion-item lines="none">
-            <ion-input [(ngModel)]="newTask.description" name="description" placeholder="Description"></ion-input>
-          </ion-item>
-          <ion-item lines="none">
-            <ion-select [(ngModel)]="newTask.priority" name="priority" placeholder="Priority">
-              <ion-select-option value="low">Low</ion-select-option>
-              <ion-select-option value="medium">Medium</ion-select-option>
-              <ion-select-option value="high">High</ion-select-option>
-            </ion-select>
-          </ion-item>
-          <ion-button expand="block" type="submit">Add Task</ion-button>
-        </form>
-        <!-- [disabled]="!taskForm.form.valid" -->
-        <!-- Task List -->
-        <ion-list class="task-list" *ngIf="tasks.length; else noTasks">
-          <ion-item-sliding *ngFor="let task of tasks">
-            <ion-item class="all-tasks" [color]="getPriorityColor(task.priority)" lines="none">
-              <ion-label>
-                <h2>{{ task.title }}</h2>
-                <p>{{ task.description }}</p>
-                <ion-badge slot="end">{{ task.priority }}</ion-badge>
-              </ion-label>
-              <ion-button color="light" slot="end" (click)="editTask(task)">
-                <ion-icon name="create-outline"></ion-icon>
-              </ion-button>
-              <ion-button slot="end" (click)="deleteTask(task._id)">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-          </ion-item-sliding>
-        </ion-list>
-        <ng-template #noTasks>
-          <div class="no-tasks">No tasks yet. Start by adding one!</div>
-        </ng-template>
-      </ion-card-content>
-    </ion-card>
-  </div>
+  <!-- Add Task Button -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openAddTaskModal()" class="add-task-fab">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
+  <!-- Task Sections -->
+  <div class="tasks-container" *ngIf="!(loading$ | async)">
+    
+    <!-- Pending Tasks -->
+    <div class="task-section pending-section">
+      <div class="section-header">
+        <h3 class="section-title">
+          <ion-icon name="time-outline" class="section-icon"></ion-icon>
+          Pending Tasks
+        </h3>
+        <ion-badge color="warning" class="task-count">{{ (pendingTasks$ | async)?.length || 0 }}</ion-badge>
+      </div>
+      
+      <div class="tasks-list" *ngIf="(pendingTasks$ | async)?.length; else noPendingTasks">
+        <ion-card 
+          *ngFor="let task of (pendingTasks$ | async); trackBy: trackByTaskId" 
+          class="task-card pending-card"
+          (click)="editTask(task)">
+          
+          <ion-card-content class="task-content">
+            <div class="task-header">
+              <h4 class="task-title">{{ task.title }}</h4>
+              <div class="task-actions">
+                <ion-badge 
+                  [color]="getPriorityColor(task.priority)" 
+                  class="priority-badge">
+                  {{ task.priority }}
+                </ion-badge>
+                <ion-checkbox 
+                  [checked]="false"
+                  (ionChange)="toggleTaskStatus(task)"
+                  class="task-checkbox">
+                </ion-checkbox>
+              </div>
+            </div>
+            
+            <p class="task-description" *ngIf="task.description">
+              {{ task.description }}
+            </p>
+            
+            <div class="task-meta">
+              <span class="task-date">
+                <ion-icon name="calendar-outline"></ion-icon>
+                {{ task.createdAt | date:'short' }}
+              </span>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      
+      <ng-template #noPendingTasks>
+        <div class="empty-state">
+          <ion-icon name="checkmark-circle-outline" class="empty-icon"></ion-icon>
+          <p class="empty-text">No pending tasks</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- In Progress Tasks -->
+    <div class="task-section progress-section">
+      <div class="section-header">
+        <h3 class="section-title">
+          <ion-icon name="play-circle-outline" class="section-icon"></ion-icon>
+          In Progress
+        </h3>
+        <ion-badge color="primary" class="task-count">{{ (inProgressTasks$ | async)?.length || 0 }}</ion-badge>
+      </div>
+      
+      <div class="tasks-list" *ngIf="(inProgressTasks$ | async)?.length; else noProgressTasks">
+        <ion-card 
+          *ngFor="let task of (inProgressTasks$ | async); trackBy: trackByTaskId" 
+          class="task-card progress-card"
+          (click)="editTask(task)">
+          
+          <ion-card-content class="task-content">
+            <div class="task-header">
+              <h4 class="task-title">{{ task.title }}</h4>
+              <div class="task-actions">
+                <ion-badge 
+                  [color]="getPriorityColor(task.priority)" 
+                  class="priority-badge">
+                  {{ task.priority }}
+                </ion-badge>
+                <div class="status-indicator">
+                  <ion-icon name="checkmark-outline" class="single-check"></ion-icon>
+                </div>
+                <ion-checkbox 
+                  [checked]="false"
+                  (ionChange)="toggleTaskStatus(task)"
+                  class="task-checkbox">
+                </ion-checkbox>
+              </div>
+            </div>
+            
+            <p class="task-description" *ngIf="task.description">
+              {{ task.description }}
+            </p>
+            
+            <div class="task-meta">
+              <span class="task-date">
+                <ion-icon name="calendar-outline"></ion-icon>
+                {{ task.createdAt | date:'short' }}
+              </span>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      
+      <ng-template #noProgressTasks>
+        <div class="empty-state">
+          <ion-icon name="play-circle-outline" class="empty-icon"></ion-icon>
+          <p class="empty-text">No tasks in progress</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Completed Tasks -->
+    <div class="task-section completed-section">
+      <div class="section-header">
+        <h3 class="section-title">
+          <ion-icon name="checkmark-done-outline" class="section-icon"></ion-icon>
+          Completed
+        </h3>
+        <ion-badge color="success" class="task-count">{{ (completedTasks$ | async)?.length || 0 }}</ion-badge>
+      </div>
+      
+      <div class="tasks-list" *ngIf="(completedTasks$ | async)?.length; else noCompletedTasks">
+        <ion-card 
+          *ngFor="let task of (completedTasks$ | async); trackBy: trackByTaskId" 
+          class="task-card completed-card"
+          (click)="editTask(task)">
+          
+          <ion-card-content class="task-content">
+            <div class="task-header">
+              <h4 class="task-title completed-title">{{ task.title }}</h4>
+              <div class="task-actions">
+                <ion-badge 
+                  [color]="getPriorityColor(task.priority)" 
+                  class="priority-badge">
+                  {{ task.priority }}
+                </ion-badge>
+                <div class="status-indicator">
+                  <ion-icon name="checkmark-outline" class="double-check first"></ion-icon>
+                  <ion-icon name="checkmark-outline" class="double-check second"></ion-icon>
+                </div>
+              </div>
+            </div>
+            
+            <p class="task-description completed-description" *ngIf="task.description">
+              {{ task.description }}
+            </p>
+            
+            <div class="task-meta">
+              <span class="task-date">
+                <ion-icon name="calendar-outline"></ion-icon>
+                {{ task.createdAt | date:'short' }}
+              </span>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      
+      <ng-template #noCompletedTasks>
+        <div class="empty-state">
+          <ion-icon name="trophy-outline" class="empty-icon"></ion-icon>
+          <p class="empty-text">No completed tasks yet</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
 </ion-content>
+

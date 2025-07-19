@@ -12,8 +12,6 @@ import { IonicModule } from '@ionic/angular';
 import { TaskService, Task } from 'src/app/services/task.service';
 import { CommonService } from 'src/app/services/common.service';
 import { Observable, Subscription } from 'rxjs';
-import { ThemeToggleComponent } from 'src/app/components/theme-toggle/theme-toggle.component';
-import { AddEditTaskPage } from '../add-edit-task/add-edit-task.page'; // Import the new page
 
 @Component({
   selector: 'app-home',
@@ -21,43 +19,43 @@ import { AddEditTaskPage } from '../add-edit-task/add-edit-task.page'; // Import
   styleUrls: ['./home.page.scss'],
   standalone: true,
   providers: [StorageService],
-  imports: [IonicModule, FormsModule, CommonModule, ThemeToggleComponent],
+  imports: [IonicModule, FormsModule, CommonModule],
 })
 export class HomePage implements OnInit, OnDestroy {
   quotes: string[] = [
     'Believe in yourself!',
     'Start where you are. Use what you have. Do what you can.',
     'Success is the sum of small efforts repeated day in and day out.',
-    'Don\'t watch the clock; do what it does. Keep going.',
+    'Don't watch the clock; do what it does. Keep going.',
     'The secret of getting ahead is getting started.',
-    'Your limitation—it\'s only your imagination.',
+    'Your limitation—it's only your imagination.',
     'Push yourself, because no one else is going to do it for you.',
     'Great things never come from comfort zones.',
     'Dream it. Wish it. Do it.',
-    'Success doesn\'t just find you. You have to go out and get it.'
+    'Success doesn't just find you. You have to go out and get it.'
   ];
-
+  
   currentQuote: string = '';
   quoteIndex: number = 0;
   name = '';
   email = '';
-
+  
   // Task observables
   pendingTasks$: Observable<Task[]>;
   inProgressTasks$: Observable<Task[]>;
   completedTasks$: Observable<Task[]>;
   loading$: Observable<boolean>;
-
-  newTask: Omit<Task, '_id'> = {
-    title: '',
-    description: '',
-    priority: 'low',
-    status: 'pending'
+  
+  newTask: Omit<Task, '_id'> = { 
+    title: '', 
+    description: '', 
+    priority: 'low', 
+    status: 'pending' 
   };
-
+  
   editingTaskId: string | null = null;
   showAddTaskForm = false;
-
+  
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -105,31 +103,70 @@ export class HomePage implements OnInit, OnDestroy {
     this.subscriptions.push(sub);
   }
 
-  async openAddTaskModal(task?: Task) {
-    const modal = await this.modalCtrl.create({
-      component: AddEditTaskPage,
-      componentProps: {
-        task: task || null
-      },
-      breakpoints: [0, 0.9],
-      initialBreakpoint: 0.9,
-      handle: true,
-      backdropDismiss: true,
-      showBackdrop: true,
-      cssClass: 'add-edit-task-modal',
-    });
-    await modal.present();
-    const { data, role } = await modal.onWillDismiss();
-    if (role === 'backdrop' || role === 'cancel') {
-      // Modal dismissed without saving, refresh tasks if needed
-      this.loadTasks();
-    } else if (data && data.refresh) {
-      this.loadTasks();
+  async addTask() {
+    if (!this.newTask.title.trim() || !this.newTask.description.trim()) {
+      this.commonService.presentToast("Please fill in all task details!", 'danger');
+      return;
+    }
+
+    const taskPayload: Omit<Task, '_id'> = {
+      title: this.newTask.title.trim(),
+      description: this.newTask.description.trim(),
+      priority: this.newTask.priority,
+      status: 'pending'
+    };
+
+    try {
+      if (this.editingTaskId) {
+        // Update existing task
+        const sub = this.taskService.updateTask(this.editingTaskId, taskPayload).subscribe({
+          next: (res) => {
+            if (res.success) {
+              this.commonService.presentToast(res.message, 'success');
+              this.resetForm();
+            } else {
+              this.commonService.presentToast(res.message || 'Failed to update task', 'danger');
+            }
+          },
+          error: (err) => {
+            console.error(err);
+            this.commonService.presentToast('Failed to update task: ' + (err.error?.message || err.message), 'danger');
+          }
+        });
+        this.subscriptions.push(sub);
+      } else {
+        // Create new task
+        const sub = this.taskService.createTask(taskPayload).subscribe({
+          next: (res) => {
+            if (res.success) {
+              this.commonService.presentToast(res.message, 'success');
+              this.resetForm();
+            } else {
+              this.commonService.presentToast(res.message || 'Failed to create task', 'danger');
+            }
+          },
+          error: (err) => {
+            console.error(err);
+            this.commonService.presentToast('Failed to create task: ' + (err.error?.message || err.message), 'danger');
+          }
+        });
+        this.subscriptions.push(sub);
+      }
+    } catch (err: any) {
+      console.error(err);
+      this.commonService.presentToast('Failed to save task: ' + (err.error?.message || err.message), 'danger');
     }
   }
 
   editTask(task: Task) {
-    this.openAddTaskModal(task);
+    this.editingTaskId = task._id!;
+    this.newTask = {
+      title: task.title,
+      description: task.description,
+      priority: task.priority,
+      status: task.status
+    };
+    this.showAddTaskForm = true;
   }
 
   deleteTask(taskId: string) {
@@ -153,7 +190,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   toggleTaskStatus(task: Task) {
     let newStatus: Task['status'];
-
+    
     switch (task.status) {
       case 'pending':
         newStatus = 'in-progress';
@@ -294,5 +331,3 @@ export class HomePage implements OnInit, OnDestroy {
     return task._id || index.toString();
   }
 }
-
-

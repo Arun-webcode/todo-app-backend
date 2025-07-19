@@ -1,29 +1,10 @@
-ion-content {
-    --background: var(--ion-color-primary-contrast);
-}
+@import '../../auth/login/login.page.scss';
 
-.modal-content {
-    background: var(--ion-color-primary-contrast);
-    ;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.input-wrapper {
+    margin-top: 2rem !important;
 
-    .form-container {
-        width: 90%;
-        margin: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        margin-top: 20px;
-
-        ion-input {
-            --color: var(--ion-color-dark-tint);
-        }
-    }
-
-    .confirm-btn {
-        margin-top: 10px;
+    .custom-input {
+        --background: var(--ion-color-light);
+        --color: var(--ion-color-dark);
     }
 }

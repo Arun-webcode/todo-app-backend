@@ -1,22 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { ModalController } from '@ionic/angular';
-import { IonInput, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonLabel, IonHeader, IonContent, IonToolbar, IonTitle } from '@ionic/angular/standalone';
+import { IonInput, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonHeader, IonContent, IonToolbar, IonTitle, IonIcon, IonButtons } from '@ionic/angular/standalone';
 import { Constants } from 'src/app/config/constants';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonService } from 'src/app/services/common.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { ThemeToggleComponent } from 'src/app/components/theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.page.html',
   styleUrls: ['./reset-password.page.scss'],
   standalone: true,
-  imports: [IonTitle, IonToolbar, IonContent, IonHeader, IonLabel,
+  imports: [IonButtons, IonIcon, IonTitle, IonToolbar, IonContent, IonHeader,
     IonInput, IonButton, IonCardTitle, IonCardContent,
-    IonCardSubtitle, IonCardHeader, IonCard, FormsModule, CommonModule, RouterModule
+    IonCardSubtitle, IonCardHeader, IonCard, FormsModule, CommonModule, RouterModule, ThemeToggleComponent
   ]
 })
 export class ResetPasswordPage implements OnInit {
@@ -42,6 +42,11 @@ export class ResetPasswordPage implements OnInit {
 
   async ionViewWillEnter() {
     this.isLogin = await this.storageService.getItem(Constants.AUTH_TOKEN);
+  }
+
+  togglePasswordVisibility() {
+    this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
+    this.passwordIcon = this.passwordIcon === 'eye-off' ? 'eye' : 'eye-off';
   }
 
   forgetToLogin() {
