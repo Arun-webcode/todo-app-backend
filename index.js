@@ -34,7 +34,11 @@ app.use("/api/v1/tasks", taskRoute);
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-    connectDB();
-    console.log(`Server running at port ${PORT}`);
+connectDB().then(() => {
+    app.listen(PORT, () => {
+        console.log(`Server running at port ${PORT}`);
+    });
+}).catch((err) => {
+    console.error("Failed to connect to DB:", err);
+    process.exit(1);
 });
