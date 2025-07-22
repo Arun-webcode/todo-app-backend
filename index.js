@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const corsOption = {
-    origin: ["*", "https://todo-app-frontend-sandy-chi.vercel.app"],
+    origin: "https://todo-app-frontend-sandy-chi.vercel.app",
     credentials: true,
 };
 app.use(cors(corsOption));
