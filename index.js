@@ -19,7 +19,7 @@ const corsOption = {
     origin: "https://todo-app-frontend-sandy-chi.vercel.app",
     credentials: true,
 };
-app.use("*", cors(corsOption));
+app.use(cors(corsOption));
 
 // Routes
 app.use("/api/v1/user", userRoute);
