@@ -233,8 +233,8 @@ export const login = async (req, res) => {
             .cookie("token", token, {
                 maxAge: 24 * 60 * 60 * 1000,
                 httpOnly: true,
-                sameSite: "None",
                 secure: true,
+                sameSite: "None"
             })
             .json({
                 message: `Welcome back ${user.name}`,
@@ -314,7 +314,7 @@ export const deleteAccount = async (req, res) => {
 
         res.clearCookie("token", {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
+            secure: true,
             sameSite: "None"
         });
 

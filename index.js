@@ -7,20 +7,18 @@ import userRoute from "./routes/userRoutes.js"
 import taskRoute from "./routes/taskRoutes.js"
 
 dotenv.config();
-
 const app = express();
 
+const corsOption = {
+    origin: ["https://todo-app-webcode.netlify.app", "http://localhost:4200"],
+    credentials: true,
+};
+
 // Middleware
+app.use(cors(corsOption));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-const corsOption = {
-    // origin: "https://todo-app-frontend-sandy-chi.vercel.app",
-    origin: "https://todo-app-webcode.netlify.app",
-    credentials: true,
-};
-app.use(cors(corsOption));
 
 // Routes
 app.use("/api/v1/user", userRoute);
