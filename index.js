@@ -10,7 +10,7 @@ dotenv.config();
 const app = express();
 
 const corsOption = {
-    origin: ["https://todo-app-webcode.netlify.app", "http://localhost:4200"],
+    origin: ["http://localhost:4200", "https://todo-app-webcode.netlify.app"],
     credentials: true,
 };
 
